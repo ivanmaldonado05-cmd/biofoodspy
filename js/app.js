@@ -52,6 +52,7 @@
     mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg>',
     check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
     truck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+    trash:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>',
     ig:'<svg viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.42 2.17 8.8 2.16 12 2.16zm0 1.62c-3.15 0-3.5.01-4.74.07-.85.04-1.31.18-1.62.3-.41.16-.7.35-1 .66-.31.3-.5.59-.66 1-.12.31-.26.77-.3 1.62-.06 1.24-.07 1.59-.07 4.74s.01 3.5.07 4.74c.04.85.18 1.31.3 1.62.16.41.35.7.66 1 .3.31.59.5 1 .66.31.12.77.26 1.62.3 1.24.06 1.59.07 4.74.07s3.5-.01 4.74-.07c.85-.04 1.31-.18 1.62-.3.41-.16.7-.35 1-.66.31-.3.5-.59.66-1 .12-.31.26-.77.3-1.62.06-1.24.07-1.59.07-4.74s-.01-3.5-.07-4.74c-.04-.85-.18-1.31-.3-1.62a2.7 2.7 0 0 0-.66-1 2.7 2.7 0 0 0-1-.66c-.31-.12-.77-.26-1.62-.3-1.24-.06-1.59-.07-4.74-.07zM12 6.87A5.13 5.13 0 1 0 12 17.13 5.13 5.13 0 0 0 12 6.87zm0 8.46A3.33 3.33 0 1 1 12 8.67a3.33 3.33 0 0 1 0 6.66zm6.54-8.66a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0z"/></svg>',
     fb:'<svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12z"/></svg>'
   };
@@ -80,6 +81,7 @@
     saveCart(cart); syncCart();
   }
   function removeLine(handle,size){ cart = cart.filter(function(i){return !(i.handle===handle&&i.size===size);}); saveCart(cart); syncCart(); }
+  function clearCart(){ cart = []; saveCart(cart); syncCart(); }
 
   function syncCart(){
     var count = cartCount();
@@ -203,6 +205,7 @@
     foot.innerHTML =
       '<div class="drawer__total"><span>Total</span><b>'+money(cartTotal())+'</b></div>'+
       '<button class="btn btn--wa btn--block btn--lg" id="checkoutBtn">'+IC.wa+' Finalizar por WhatsApp</button>'+
+      '<button class="drawer__clear" id="clearCartBtn">'+IC.trash+' Vaciar carrito</button>'+
       '<p class="drawer__note">Coordinás el pago por depósito bancario al confirmar.</p>';
     // bind
     $$("#drawerBody [data-act]").forEach(function(b){
@@ -215,6 +218,7 @@
       });
     });
     $("#checkoutBtn").addEventListener("click", openCheckout);
+    $("#clearCartBtn").addEventListener("click", function(){ clearCart(); });
   }
 
   function openDrawer(){ $("#drawer").classList.add("open"); $("#overlay").classList.add("open"); document.body.classList.add("no-scroll"); }
