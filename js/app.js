@@ -66,6 +66,7 @@
   var IC = {
     cart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',
     menu:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>',
+    chev:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
     close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
     plus:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
     arrow:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>',
@@ -133,14 +134,26 @@
   }
 
   /* ================= SHARED UI ================= */
-  function navLinksHTML(active){
-    var links = [{h:"index.html",t:"Inicio",p:"home"},{h:"catalogo.html",t:"Catálogo",p:"catalog"}]
-      .concat(CATS.slice(0,6).map(function(c){return {h:"catalogo.html?cat="+c.slug,t:c.label,p:"cat-"+c.slug};}))
-      .concat([{h:"contacto.html",t:"Contacto",p:"contact"}]);
-    return links.map(function(l){
-      var a = (active===l.p)?" class=\"active\"":"";
-      return '<li><a href="'+l.h+'"'+a+'>'+l.t+'</a></li>';
-    }).join("");
+  function catMenuLinks(){
+    return CATS.map(function(c){ return '<a href="catalogo.html?cat='+c.slug+'"><span class="cm-emoji">'+c.emoji+'</span>'+c.label+'</a>'; }).join("");
+  }
+  function desktopNavHTML(active){
+    return '<ul>'+
+      '<li><a href="index.html"'+(active==="home"?' class="active"':'')+'>Inicio</a></li>'+
+      '<li><a href="catalogo.html"'+(active==="catalog"?' class="active"':'')+'>Catálogo</a></li>'+
+      '<li class="has-dropdown"><a class="nav-drop-toggle" href="catalogo.html">Categorías '+IC.chev+'</a>'+
+        '<div class="nav-dropdown">'+catMenuLinks()+'</div></li>'+
+      '<li><a href="contacto.html"'+(active==="contact"?' class="active"':'')+'>Contacto</a></li>'+
+    '</ul>';
+  }
+  function mobileNavHTML(){
+    return '<ul>'+
+      '<li><a href="index.html">Inicio</a></li>'+
+      '<li><a href="catalogo.html">Catálogo</a></li>'+
+      '<li class="m-has-sub"><button type="button" class="m-sub-toggle">Categorías '+IC.chev+'</button>'+
+        '<div class="m-sub">'+catMenuLinks()+'</div></li>'+
+      '<li><a href="contacto.html">Contacto</a></li>'+
+    '</ul>';
   }
 
   function buildHeader(){
@@ -153,7 +166,7 @@
           '<img src="assets/img/logo-black.png" alt="Biofoods Paraguay">'+
           '<span class="brand__text"><span class="brand__name">Biofoods</span><span class="brand__tag">Paraguay</span></span>'+
         '</a>'+
-        '<nav class="main-nav" aria-label="Principal"><ul>'+ navLinksHTML(active) +'</ul></nav>'+
+        '<nav class="main-nav" aria-label="Principal">'+ desktopNavHTML(active) +'</nav>'+
         '<div class="header-actions">'+
           '<button class="icon-btn" id="cartBtn" aria-label="Abrir carrito">'+IC.cart+'<span class="cart-count" aria-hidden="true">0</span></button>'+
           '<button class="icon-btn nav-toggle" id="navToggle" aria-label="Abrir menú">'+IC.menu+'</button>'+
@@ -165,10 +178,13 @@
       '<div class="mobile-nav" id="mobileNav" aria-hidden="true">'+
         '<div class="mobile-nav__top"><a class="brand" href="index.html"><img src="assets/img/logo-black.png" alt="Biofoods"><span class="brand__text"><span class="brand__name">Biofoods</span><span class="brand__tag">Paraguay</span></span></a>'+
         '<button class="icon-btn" id="mnavClose" aria-label="Cerrar menú">'+IC.close+'</button></div>'+
-        '<ul>'+ navLinksHTML(active) +'</ul>'+
+        '<div class="mobile-nav__scroll">'+ mobileNavHTML() +'</div>'+
         '<div class="mobile-nav__footer"><a class="btn btn--wa btn--block" href="'+waLink("Hola Biofoods! Quiero hacer una consulta 🥜")+'" target="_blank" rel="noopener">'+IC.wa+' Escribir por WhatsApp</a></div>'+
       '</div>');
     document.body.appendChild(mnav);
+    // mobile categories accordion
+    var mSubToggle = mnav.querySelector(".m-sub-toggle");
+    if(mSubToggle){ mSubToggle.addEventListener("click", function(){ mSubToggle.parentElement.classList.toggle("open"); }); }
 
     // scroll shrink
     var header = $("#siteHeader");
