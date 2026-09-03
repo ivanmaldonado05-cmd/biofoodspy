@@ -1,0 +1,1601 @@
+[
+ {
+  "handle": "cacao-al-100",
+  "title": "Cacao al 100%",
+  "category": "superfoods",
+  "description": "",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 20000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 35000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 60000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 115000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/Biofoods-14_Large_db8ad448-704a-48b7-8141-3a7dec642ff8.jpg?v=1721680138"
+  ],
+  "localImages": [
+   "assets/img/cacao-al-100.jpg"
+  ]
+ },
+ {
+  "handle": "almendras-naturales",
+  "title": "Almendras",
+  "category": "frutos-secos",
+  "description": "Almendras naturales",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 16000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 35000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 60000
+   },
+   {
+    "size": "1 KG.",
+    "price": 110000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-9.jpg?v=1708389618"
+  ],
+  "localImages": [
+   "assets/img/almendras-naturales.jpg"
+  ]
+ },
+ {
+  "handle": "combo-frutos-secos",
+  "title": "Combo frutos secos",
+  "category": "combos",
+  "description": "Almendras 500gr + Nuez mariposa 500gr + Castaña de caju 500gr",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "Combo frutos secos",
+    "price": 175000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/WhatsApp_Image_2026-07-08_at_14.39.38_0e1b31ef-4d86-4bb6-9ab6-391c92d1ad0a.jpg?v=1783602580"
+  ],
+  "localImages": [
+   "assets/img/combo-frutos-secos.jpg"
+  ]
+ },
+ {
+  "handle": "combo-picada",
+  "title": "Combo picada",
+  "category": "combos",
+  "description": "Almendras ahumadas 500gr + Pistachos con cáscara y sal 500gr + Maní tostado sin sal 500gr",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "Combo picada",
+    "price": 198000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/WhatsApp_Image_2026-07-08_at_13.51.02.jpg?v=1783602872"
+  ],
+  "localImages": [
+   "assets/img/combo-picada.jpg"
+  ]
+ },
+ {
+  "handle": "combo-harinas",
+  "title": "Combo harinas",
+  "category": "combos",
+  "description": "Arrurruz 1k + Fibra de bambú 1k",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "Combo harinas",
+    "price": 207000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/WhatsApp_Image_2026-07-08_at_13.51.02_1.jpg?v=1783602845"
+  ],
+  "localImages": [
+   "assets/img/combo-harinas.jpg"
+  ]
+ },
+ {
+  "handle": "combo-chocolates",
+  "title": "Combo chocolovers",
+  "category": "combos",
+  "description": "Almendras bañadas 250gr + Avellanas bañadas 250gr + Castañas de Caju doble cobertura 250gr",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "Combo chocolovers",
+    "price": 189000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/WhatsApp_Image_2026-07-08_at_13.41.49.jpg?v=1783605227"
+  ],
+  "localImages": [
+   "assets/img/combo-chocolates.jpg"
+  ]
+ },
+ {
+  "handle": "combo-superfoods",
+  "title": "Combo superfoods",
+  "category": "combos",
+  "description": "Spirulina 250gr + Colágeno 250gr + Maca peruana 250gr",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "Combo superfoods",
+    "price": 166500
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/WhatsApp_Image_2026-07-08_at_13.41.48_2083bfcc-fdf1-4c57-866c-37cb1deb153d.jpg?v=1783602056"
+  ],
+  "localImages": [
+   "assets/img/combo-superfoods.jpg"
+  ]
+ },
+ {
+  "handle": "cascarilla-de-psyllium",
+  "title": "Cascarilla de Psyllium",
+  "category": "superfoods",
+  "description": "",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 30000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 60000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 110000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 200000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/Biofoods-8_Large_cee3ef56-29a7-4e2c-a424-013712bb749d.jpg?v=1721680145"
+  ],
+  "localImages": [
+   "assets/img/cascarilla-de-psyllium.jpg"
+  ]
+ },
+ {
+  "handle": "ciruela-sin-carozo",
+  "title": "Ciruela sin Carozo",
+  "category": "deshidratadas",
+  "description": "Ciruelas deshidratadas sin carozo.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 15000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 25000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 40000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 75000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-6.jpg?v=1708391643"
+  ],
+  "localImages": [
+   "assets/img/ciruela-sin-carozo.jpg"
+  ]
+ },
+ {
+  "handle": "almendras-banadas-en-chocolate-sin-azucar-copia",
+  "title": "Gotas de chocolate sin azúcar al 70% cacao",
+  "category": "chocolates",
+  "description": "Gotas de chocolate al 70% sin azúcar. *NO contiene leche. Gluten Free",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 29000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 55000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 110000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/1573658155303-1-Chocolate-granel-chip-55_-cacao-sin-azucar-Sin-Envase_600x_d53919d7-35a9-49a5-8296-c2134b1ff405.webp?v=1778334297"
+  ],
+  "localImages": [
+   "assets/img/almendras-banadas-en-chocolate-sin-azucar-copia.webp"
+  ]
+ },
+ {
+  "handle": "semillas-de-calabaza",
+  "title": "Semillas De Calabaza",
+  "category": "semillas",
+  "description": "Semillas De Calabaza Sin Cascara",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 20000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 35000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 60000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 110000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-37_5eff5f04-8147-49f1-99fd-7adf3be47eac.jpg?v=1713927410"
+  ],
+  "localImages": [
+   "assets/img/semillas-de-calabaza.jpg"
+  ]
+ },
+ {
+  "handle": "colageno-hidrolizado",
+  "title": "Colágeno Hidrolizado",
+  "category": "superfoods",
+  "description": "",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 40000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 70000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 130000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 250000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/Biofoods-2_Large_54525026-91f6-4167-9992-5520e992380e.jpg?v=1721680135"
+  ],
+  "localImages": [
+   "assets/img/colageno-hidrolizado.jpg"
+  ]
+ },
+ {
+  "handle": "mix-11-semillas",
+  "title": "Mix 11 semillas",
+  "category": "semillas",
+  "description": "",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 15000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 25000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 45000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 75000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/Biofoods-5_Large_9c42b7fb-35e2-49b2-8751-e547ef903175.jpg?v=1721680148"
+  ],
+  "localImages": [
+   "assets/img/mix-11-semillas.jpg"
+  ]
+ },
+ {
+  "handle": "maca-peruana",
+  "title": "Maca Peruana",
+  "category": "superfoods",
+  "description": "",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 25000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 45000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 80000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 150000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/Biofoods-23_Large_2860a39d-5dab-4565-a497-7fdc5d617602.jpg?v=1721680131"
+  ],
+  "localImages": [
+   "assets/img/maca-peruana.jpg"
+  ]
+ },
+ {
+  "handle": "datiles-con-carozo",
+  "title": "Dátiles con Carozo",
+  "category": "deshidratadas",
+  "description": "Dátiles israelis medjoul con carozo.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 20000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 30000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 55000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 100000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-14.jpg?v=1708391680"
+  ],
+  "localImages": [
+   "assets/img/datiles-con-carozo.jpg"
+  ]
+ },
+ {
+  "handle": "almendras-banadas-en-chocolate-sin-azucar",
+  "title": "Almendras bañadas en chocolate sin azúcar",
+  "category": "chocolates",
+  "description": "Almendras bañadas con chocolate al 70% sin azúcar. *Contiene algo de leche.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 40000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 70000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 120000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-196_7f2323f9-06cd-469f-9daf-3a8d5b89962c.jpg?v=1717420737"
+  ],
+  "localImages": [
+   "assets/img/almendras-banadas-en-chocolate-sin-azucar.jpg"
+  ]
+ },
+ {
+  "handle": "avellanas-banadas-en-chocolate-sin-azucar",
+  "title": "Avellanas bañadas en chocolate sin azúcar",
+  "category": "chocolates",
+  "description": "Avellanas bañadas con chocolate al 70% sin azúcar. *Contiene algo de leche.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 40000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 70000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 120000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/image-2024-11-29T173524.718.jpg?v=1732912572"
+  ],
+  "localImages": [
+   "assets/img/avellanas-banadas-en-chocolate-sin-azucar.jpg"
+  ]
+ },
+ {
+  "handle": "castanas-de-caju-doble-cobertura-de-chocolate-sin-azucar",
+  "title": "Castañas de Caju doble cobertura",
+  "category": "frutos-secos",
+  "description": "Castañas de caju doble cobertura: bañados en chocolate blanco, cubierto con cacao al 70%",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 40000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 70000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 120000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/image-2024-11-29T173534.638.jpg?v=1732912628"
+  ],
+  "localImages": [
+   "assets/img/castanas-de-caju-doble-cobertura-de-chocolate-sin-azucar.jpg"
+  ]
+ },
+ {
+  "handle": "almendras-copia",
+  "title": "Almendras Ahumadas",
+  "category": "frutos-secos",
+  "description": "Almendras naturales con piel y sal",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 25000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 45000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 80000
+   },
+   {
+    "size": "1 KG.",
+    "price": 150000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/image_-_2024-11-01T132230.502.jpg?v=1730478232"
+  ],
+  "localImages": [
+   "assets/img/almendras-copia.jpg"
+  ]
+ },
+ {
+  "handle": "mix-diabetico",
+  "title": "Mix Diabetico",
+  "category": "mixes",
+  "description": "Mix de almendras, nuez mariposa, castañas de caju, castañas de pará, nuez macadamia, avellanas y semillas de girasol.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "250 Gr.",
+    "price": 45000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 70000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 130000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-24.jpg?v=1708391177"
+  ],
+  "localImages": [
+   "assets/img/mix-diabetico.jpg"
+  ]
+ },
+ {
+  "handle": "mix-deluxe",
+  "title": "Mix Deluxe",
+  "category": "mixes",
+  "description": "Mix de almendras, nuez mariposa, castañas de caju, nuez macadamia, castañas de pará, chips de banana y uvas pasas negras.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "250 Gr.",
+    "price": 40000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 65000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 120000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-18.jpg?v=1708391328"
+  ],
+  "localImages": [
+   "assets/img/mix-deluxe.jpg"
+  ]
+ },
+ {
+  "handle": "castanas-de-para",
+  "title": "Castañas De Para",
+  "category": "frutos-secos",
+  "description": "Naturales",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 30000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 55000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 100000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 190000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-26_6cc4e7df-8480-4da7-8bcb-a65cf356af0c.jpg?v=1713927379"
+  ],
+  "localImages": [
+   "assets/img/castanas-de-para.jpg"
+  ]
+ },
+ {
+  "handle": "nuez-macadamia",
+  "title": "Nuez Macadamia",
+  "category": "frutos-secos",
+  "description": "Naturales",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 30000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 55000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 100000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 190000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-27_0abcad53-613d-414d-b6da-7dcb25baf4b9.jpg?v=1713927383"
+  ],
+  "localImages": [
+   "assets/img/nuez-macadamia.jpg"
+  ]
+ },
+ {
+  "handle": "eritritol",
+  "title": "Eritritol",
+  "category": "leche-endulzantes",
+  "description": "Edulcorante natural, tiene una dulzura de un 70% menos del azúcar, es bajo en calorías",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 20000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 35000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 55000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 100000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/eritritol.jpg?v=1764251787"
+  ],
+  "localImages": [
+   "assets/img/eritritol.jpg"
+  ]
+ },
+ {
+  "handle": "azucar-de-coco",
+  "title": "Azúcar de coco",
+  "category": "leche-endulzantes",
+  "description": "Edulcorante natural, derivado d el néctar de las flores de la palmera cocotera , con un bajo índice glucémico",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 20000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 35000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 55000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 100000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/azucardecoco.png?v=1764251727"
+  ],
+  "localImages": [
+   "assets/img/azucar-de-coco.png"
+  ]
+ },
+ {
+  "handle": "xilitol",
+  "title": "Xilitol",
+  "category": "leche-endulzantes",
+  "description": "Edulcorante natural, ofrece un sabor similar al del azúcar pero 40% menos de calorías , con un bajo índice glucémico",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 20000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 35000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 55000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 100000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/xilitol-1522162948551_v2_4x3_5baa20f6-44b7-4e5c-ac8d-04e5d6eef316.jpg?v=1764251819"
+  ],
+  "localImages": [
+   "assets/img/xilitol.jpg"
+  ]
+ },
+ {
+  "handle": "pistachos",
+  "title": "Pistachos con cáscara y sal",
+  "category": "frutos-secos",
+  "description": "Con cascara y con sal.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 30000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 60000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 115000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 220000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-8.jpg?v=1708389923"
+  ],
+  "localImages": [
+   "assets/img/pistachos.jpg"
+  ]
+ },
+ {
+  "handle": "supercoffee-3-0-220gr",
+  "title": "Supercoffee 3.0 - 220gr",
+  "category": "superfoods",
+  "description": "Mas que un café, un superalimento. Aumento de energía y concentración, Mejora el rendimiento físico, aumenta los niveles de saciedad, mejora el tránsito intestinal y el sistema inmunológico.",
+  "sizeName": "Sabor",
+  "variants": [
+   {
+    "size": "Chocolate / 220 Gr.",
+    "price": 200000
+   },
+   {
+    "size": "Chocolate / 380 Gr.",
+    "price": 300000
+   },
+   {
+    "size": "Vainilla Latte / 220 Gr.",
+    "price": 200000
+   },
+   {
+    "size": "Vainilla Latte / 380 Gr.",
+    "price": 300000
+   },
+   {
+    "size": "Original / 220 Gr.",
+    "price": 200000
+   },
+   {
+    "size": "Original / 380 Gr.",
+    "price": 300000
+   },
+   {
+    "size": "Choconilla / 220 Gr.",
+    "price": 200000
+   },
+   {
+    "size": "Choconilla / 380 Gr.",
+    "price": 300000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/chocolate_4afc2f28-7462-4645-9eb8-a8b5330f0ca1.jpg?v=1717420749",
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/vainillalate_3f7fa186-12b9-4852-b87b-66b58f538ee8.jpg?v=1717420749",
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/original_94a9268c-4597-4874-adc0-f0a959d70c7e.jpg?v=1717420749",
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/choconilla_1583410d-6f37-48bc-826a-f5c552e4427c.jpg?v=1717420749"
+  ],
+  "localImages": [
+   "assets/img/supercoffee-3-0-220gr.jpg",
+   "assets/img/supercoffee-3-0-220gr-1.jpg",
+   "assets/img/supercoffee-3-0-220gr-2.jpg",
+   "assets/img/supercoffee-3-0-220gr-3.jpg"
+  ]
+ },
+ {
+  "handle": "jengibre-en-polvo",
+  "title": "Jengibre en polvo",
+  "category": "superfoods",
+  "description": "",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 20000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 40000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 65000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 115000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/Biofoods-29_Large_b190b8a7-e2d6-4a12-8a7d-fde1c20fc3f5.jpg?v=1721680143"
+  ],
+  "localImages": [
+   "assets/img/jengibre-en-polvo.jpg"
+  ]
+ },
+ {
+  "handle": "pistachos-sin-cascara-y-sin-sal",
+  "title": "Pistachos sin cáscara y sin sal",
+  "category": "frutos-secos",
+  "description": "Sin cascara y sin sal.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 45000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 85000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 165000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 320000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/image_-_2025-06-04T183353.164.jpg?v=1749072881"
+  ],
+  "localImages": [
+   "assets/img/pistachos-sin-cascara-y-sin-sal.jpg"
+  ]
+ },
+ {
+  "handle": "harina-de-arroz",
+  "title": "Harina de Arroz",
+  "category": "harinas",
+  "description": "",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "250 Gr.",
+    "price": 10000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 16000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 25000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/image_-_2025-06-20T150937.563.jpg?v=1750443006"
+  ],
+  "localImages": [
+   "assets/img/harina-de-arroz.jpg"
+  ]
+ },
+ {
+  "handle": "spirulina-100-puro",
+  "title": "Spirulina 100% Puro",
+  "category": "superfoods",
+  "description": "",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 40000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 70000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 130000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 250000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/Biofoods-20_Large_1d102695-d60a-4f1b-b144-c18d3ac82825.jpg?v=1721680128"
+  ],
+  "localImages": [
+   "assets/img/spirulina-100-puro.jpg"
+  ]
+ },
+ {
+  "handle": "quinoa-blanca",
+  "title": "Quinoa Blanca",
+  "category": "semillas",
+  "description": "Alta en proteina, fibra y omega 3. Bajo indice glucemico.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 15000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 25000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 45000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 75000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-38_ab04b760-bb7e-4945-90f0-cc2969bc9e15.jpg?v=1713927413"
+  ],
+  "localImages": [
+   "assets/img/quinoa-blanca.jpg"
+  ]
+ },
+ {
+  "handle": "fibra-de-bambu",
+  "title": "Fibra de Bambu",
+  "category": "harinas",
+  "description": "Fibra que se usa acompañada al arrurruz, alto en fibra, bajo en carbohidratos, elimina los parásitos del intestino, keto.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "250 Gr.",
+    "price": 40000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 65000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 120000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-11.jpg?v=1708392165"
+  ],
+  "localImages": [
+   "assets/img/fibra-de-bambu.jpg"
+  ]
+ },
+ {
+  "handle": "nuez-mariposa",
+  "title": "Nuez Mariposa",
+  "category": "frutos-secos",
+  "description": "Nuez mariposa entera.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 16000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 35000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 60000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 110000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-4.jpg?v=1708389694"
+  ],
+  "localImages": [
+   "assets/img/nuez-mariposa.jpg"
+  ]
+ },
+ {
+  "handle": "curcuma-en-polvo",
+  "title": "Curcuma en polvo",
+  "category": "superfoods",
+  "description": "",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 20000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 40000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 65000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 115000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/Biofoods-17_Large_f2f46f07-5a62-4786-87cd-dbe7444d9b1f.jpg?v=1721680140"
+  ],
+  "localImages": [
+   "assets/img/curcuma-en-polvo.jpg"
+  ]
+ },
+ {
+  "handle": "guarana",
+  "title": "Guarana",
+  "category": "superfoods",
+  "description": "",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 20000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 30000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 55000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 100000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/Biofoods-26_Large_9d9595cb-e60c-4705-8d00-fb0dda8416cb.jpg?v=1721680133"
+  ],
+  "localImages": [
+   "assets/img/guarana.jpg"
+  ]
+ },
+ {
+  "handle": "leche-de-coco-en-polvo",
+  "title": "Leche De Coco En Polvo",
+  "category": "leche-endulzantes",
+  "description": "Leche Vegetal - libre de lactosa",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 25000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 40000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 70000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 130000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-39_ba87acfb-9582-4da1-bfad-0e96c6ff764d.jpg?v=1713927417"
+  ],
+  "localImages": [
+   "assets/img/leche-de-coco-en-polvo.jpg"
+  ]
+ },
+ {
+  "handle": "semillas-de-girasol",
+  "title": "Semillas De Girasol",
+  "category": "semillas",
+  "description": "Semillas De Girasol Pelado",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 8000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 14000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 20000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 35000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-36_5c12831e-75c1-49a2-8b8d-7cd3bda2f879.jpg?v=1713927406"
+  ],
+  "localImages": [
+   "assets/img/semillas-de-girasol.jpg"
+  ]
+ },
+ {
+  "handle": "harina-de-linaza-dorada",
+  "title": "Harina De Linaza Dorada",
+  "category": "harinas",
+  "description": "Harina Hecha A Base De Semillas De Lino Dorado. Keto.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "250 Gr.",
+    "price": 25000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 40000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 65000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-34_e5a1553f-bc33-47f4-b693-b0849bc3f3fb.jpg?v=1713927400"
+  ],
+  "localImages": [
+   "assets/img/harina-de-linaza-dorada.jpg"
+  ]
+ },
+ {
+  "handle": "arandanos-rojos",
+  "title": "Arandanos Rojos",
+  "category": "deshidratadas",
+  "description": "Arándanos Deshidratados Sin Azúcar Agregado",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 17000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 30000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 50000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 95000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-33_55c4d459-3ef6-446e-bd8b-51500198fa15.jpg?v=1713927396"
+  ],
+  "localImages": [
+   "assets/img/arandanos-rojos.jpg"
+  ]
+ },
+ {
+  "handle": "uvas-pasas-negras",
+  "title": "Uvas Pasas Negras Jumbo",
+  "category": "deshidratadas",
+  "description": "Uvas Deshidratadas Sin Agregado De Azúcar",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 11000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 23000
+   },
+   {
+    "size": "500gr",
+    "price": 45000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-32_21ecc053-cbea-417c-8f81-65841c8e519a.jpg?v=1713927393",
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/WhatsApp_Image_2026-04-09_at_12.12.52.jpg?v=1775754963"
+  ],
+  "localImages": [
+   "assets/img/uvas-pasas-negras.jpg",
+   "assets/img/uvas-pasas-negras-1.jpg"
+  ]
+ },
+ {
+  "handle": "mani-tostado-sin-sal",
+  "title": "Mani Tostado Sin Sal",
+  "category": "frutos-secos",
+  "description": "Tostado Sin Sal",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 9000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 15000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 25000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 30000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-29_8670ba58-236b-446d-a912-1eab48e94ff4.jpg?v=1713927390"
+  ],
+  "localImages": [
+   "assets/img/mani-tostado-sin-sal.jpg"
+  ]
+ },
+ {
+  "handle": "avellanas",
+  "title": "Avellanas",
+  "category": "frutos-secos",
+  "description": "Naturales",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 25000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 45000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 85000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 160000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-28_e822f697-3b6a-444c-81f7-b39af30e67ed.jpg?v=1713927386"
+  ],
+  "localImages": [
+   "assets/img/avellanas.jpg"
+  ]
+ },
+ {
+  "handle": "mix-personalizado",
+  "title": "Mix personalizado",
+  "category": "mixes",
+  "description": "Armá el mix con los frutos secos, frutas deshidratadas y semillas que más te gusten.",
+  "sizeName": "Title",
+  "variants": [],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-22.jpg?v=1713879407"
+  ],
+  "localImages": [
+   "assets/img/mix-personalizado.jpg"
+  ]
+ },
+ {
+  "handle": "arrurruz",
+  "title": "Arrurruz",
+  "category": "harinas",
+  "description": "Almidon que reemplaza al almidon de maiz, libre de gluten, keto.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "250 Gr.",
+    "price": 35000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 60000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 110000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-13.jpg?v=1708392034"
+  ],
+  "localImages": [
+   "assets/img/arrurruz.jpg"
+  ]
+ },
+ {
+  "handle": "harina-de-coco",
+  "title": "Harina de Coco",
+  "category": "harinas",
+  "description": "Harina de coco libre de gluten, rica en fibra, baja en carbohidratos, keto.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "250 Gr.",
+    "price": 20000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 35000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 60000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-12.jpg?v=1708391902"
+  ],
+  "localImages": [
+   "assets/img/harina-de-coco.jpg"
+  ]
+ },
+ {
+  "handle": "harina-de-almendras-sin-piel",
+  "title": "Harina de Almendras sin Piel",
+  "category": "harinas",
+  "description": "Harina de almendras marca Calconut - brasilera. Premium. Libre de gluten. Baja en carbohidratos. Keto",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "250 Gr.",
+    "price": 35000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 65000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 120000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-16.jpg?v=1708391815"
+  ],
+  "localImages": [
+   "assets/img/harina-de-almendras-sin-piel.jpg"
+  ]
+ },
+ {
+  "handle": "chips-de-banana",
+  "title": "Chips de Banana",
+  "category": "deshidratadas",
+  "description": "",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 17000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 30000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 50000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 95000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-1.jpg?v=1708391568"
+  ],
+  "localImages": [
+   "assets/img/chips-de-banana.jpg"
+  ]
+ },
+ {
+  "handle": "mix-premium-1",
+  "title": "Mix Premium",
+  "category": "mixes",
+  "description": "Mix de almendras, nuez mariposa, castañas de caju, mani sin sal, uvas pasas negras, semillas de calabaza y chips de banana.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "250 Gr.",
+    "price": 40000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 65000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 120000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-23.jpg?v=1708391278"
+  ],
+  "localImages": [
+   "assets/img/mix-premium-1.jpg"
+  ]
+ },
+ {
+  "handle": "mix-keto",
+  "title": "Mix Keto",
+  "category": "mixes",
+  "description": "Almendras, nuez mariposa, castañas de caju, avellanas y arandanos rojos.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "250 Gr.",
+    "price": 40000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 65000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 120000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-20.jpg?v=1708391055"
+  ],
+  "localImages": [
+   "assets/img/mix-keto.jpg"
+  ]
+ },
+ {
+  "handle": "mix-energetico",
+  "title": "Mix Energetico",
+  "category": "mixes",
+  "description": "Almendras, nuez mariposa, castañas de caju, chips de banana, mani sin sal y uvas pasas negras",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "250 Gr.",
+    "price": 35000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 55000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 100000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-21.jpg?v=1708391015"
+  ],
+  "localImages": [
+   "assets/img/mix-energetico.jpg"
+  ]
+ },
+ {
+  "handle": "mix-antioxidante",
+  "title": "Mix Antioxidante",
+  "category": "mixes",
+  "description": "Almendras, nuez mariposa, castañas de caju, mani sin sal, uvas pasas negras, semillas de calabaza y arandanos rojos.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "250 Gr.",
+    "price": 35000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 55000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 100000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-19.jpg?v=1708390967"
+  ],
+  "localImages": [
+   "assets/img/mix-antioxidante.jpg"
+  ]
+ },
+ {
+  "handle": "mix-clasico",
+  "title": "Mix Clasico",
+  "category": "mixes",
+  "description": "Almendras, nuez mariposa, castañas de caju, mani sin sal y uvas pasas negras.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "250 Gr.",
+    "price": 35000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 55000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 100000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-17.jpg?v=1708390815"
+  ],
+  "localImages": [
+   "assets/img/mix-clasico.jpg"
+  ]
+ },
+ {
+  "handle": "castanas-de-caju",
+  "title": "Castañas de Caju",
+  "category": "frutos-secos",
+  "description": "Naturales sin sal.",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "100 Gr.",
+    "price": 22000
+   },
+   {
+    "size": "250 Gr.",
+    "price": 45000
+   },
+   {
+    "size": "500 Gr.",
+    "price": 80000
+   },
+   {
+    "size": "1 Kg.",
+    "price": 150000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/biofoods-5.jpg?v=1708389874"
+  ],
+  "localImages": [
+   "assets/img/castanas-de-caju.jpg"
+  ]
+ },
+ {
+  "handle": "almendras",
+  "title": "Combo frutos secos",
+  "category": "combos",
+  "description": "Almendras 1k + Nuez mariposa 1k + Castañas de caju 1k",
+  "sizeName": "Tamaño",
+  "variants": [
+   {
+    "size": "Combo frutos secos",
+    "price": 333000
+   }
+  ],
+  "images": [
+   "https://cdn.shopify.com/s/files/1/0574/3116/2989/files/WhatsApp_Image_2026-07-08_at_13.57.00.jpg?v=1783602900"
+  ],
+  "localImages": [
+   "assets/img/almendras.jpg"
+  ]
+ }
+]

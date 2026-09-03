@@ -1,0 +1,6 @@
+# local dev helpers / raw data (not needed for the site)
+server.js
+data/shopify-products.json
+.DS_Store
+Thumbs.db
+node_modules/

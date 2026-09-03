@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo — Biofoods Paraguay</title>
+<meta name="description" content="Explorá todo el catálogo de Biofoods: frutos secos, mixes, frutas deshidratadas, harinas, semillas, superfoods, chocolates, combos y más.">
+<link rel="icon" href="assets/img/logo-black.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,560;9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="catalog">
+<div id="header-root"></div>
+
+<main>
+  <section class="page-hero">
+    <div class="container">
+      <span class="eyebrow">Tienda online</span>
+      <h1 id="catTitle">Todo el catálogo</h1>
+      <p class="lead">Elegí tus productos, sumalos al pedido y coordinamos el pago por depósito y el envío por WhatsApp.</p>
+    </div>
+  </section>
+
+  <section class="catalog-head">
+    <div class="container">
+      <div class="filter-bar">
+        <div class="search-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="catSearch" type="search" placeholder="Buscar productos… (ej: almendras, keto, spirulina)" aria-label="Buscar productos">
+        </div>
+        <div class="select-wrap">
+          <select id="catSort" aria-label="Ordenar">
+            <option value="featured">Destacados</option>
+            <option value="price-asc">Precio: menor a mayor</option>
+            <option value="price-desc">Precio: mayor a menor</option>
+            <option value="az">Nombre A-Z</option>
+          </select>
+        </div>
+      </div>
+      <div class="chips" id="catChips"></div>
+      <p class="result-info" id="catResult"></p>
+    </div>
+  </section>
+
+  <section class="container" style="padding-bottom:clamp(3rem,7vw,5rem)">
+    <div class="product-grid" id="catalogGrid"></div>
+  </section>
+</main>
+
+<div id="footer-root"></div>
+<script src="js/catalog-data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
