@@ -12,6 +12,30 @@
   var IG = "https://www.instagram.com/biofoods.py/";
   var FB = "https://www.facebook.com/Biofoods-Paraguay-100071634172903/";
   var BANK = { banco: "Banco Sudameris", cuenta: "Cta. Cte. 5632542", titular: "CENIN EAS", ci: "C.I. 80142067-9", alias: "801420679" };
+  var PICKUP = { office: "Oficina — Herminio Giménez 1919, casi Gral. Aquino, Asunción", ready: "Normalmente listo en 24 horas" };
+
+  /* ---------- Zonas de envío (precios del sitio actual) ---------- */
+  var SHIPPING = [
+    { name: "Asunción", price: 20000 },
+    { name: "Fernando de la Mora", price: 25000 },
+    { name: "Lambaré", price: 25000 },
+    { name: "San Lorenzo", price: 30000 },
+    { name: "Interior (Transportadora)", price: 30000 },
+    { name: "Luque", price: 35000 },
+    { name: "Mariano R. Alonso", price: 35000 }
+  ];
+
+  /* ---------- EmailJS (el cliente completa estos 3 valores) ----------
+     1) Crear cuenta gratis en https://www.emailjs.com
+     2) Agregar un "Email Service" (ej. Gmail de info@biofoodspy.com) -> SERVICE_ID
+     3) Crear un "Email Template" que use las variables: to_email, customer_name,
+        order_summary, delivery, shipping_cost, total, bank_info -> TEMPLATE_ID
+        (en el template poner "To Email" = {{to_email}} para que llegue al cliente)
+     4) Copiar el Public Key de Account -> PUBLIC_KEY
+     Mientras estén vacíos, el pedido igual se completa (WhatsApp + confirmación en pantalla),
+     solo que no se envía el email. */
+  var EMAILJS = { SERVICE_ID: "", TEMPLATE_ID: "", PUBLIC_KEY: "" };
+  function emailjsReady(){ return EMAILJS.SERVICE_ID && EMAILJS.TEMPLATE_ID && EMAILJS.PUBLIC_KEY; }
 
   var CATS = [
     { slug: "frutos-secos", label: "Frutos Secos", emoji: "🥜" },
@@ -222,10 +246,10 @@
       '</div>';
     }).join("");
     foot.innerHTML =
-      '<div class="drawer__total"><span>Total</span><b>'+money(cartTotal())+'</b></div>'+
-      '<button class="btn btn--wa btn--block btn--lg" id="checkoutBtn">'+IC.wa+' Finalizar por WhatsApp</button>'+
+      '<div class="drawer__total"><span>Subtotal</span><b>'+money(cartTotal())+'</b></div>'+
+      '<a class="btn btn--block btn--lg" id="checkoutBtn" href="checkout.html">Finalizar pedido '+IC.arrow+'</a>'+
       '<button class="drawer__clear" id="clearCartBtn">'+IC.trash+' Vaciar carrito</button>'+
-      '<p class="drawer__note">Coordinás el pago por depósito bancario al confirmar.</p>';
+      '<p class="drawer__note">El envío se calcula en el siguiente paso.</p>';
     // bind
     $$("#drawerBody [data-act]").forEach(function(b){
       b.addEventListener("click", function(){
@@ -236,129 +260,224 @@
         else if(act==="rm") removeLine(h,s);
       });
     });
-    $("#checkoutBtn").addEventListener("click", openCheckout);
     $("#clearCartBtn").addEventListener("click", function(){ clearCart(); });
   }
 
   function openDrawer(){ $("#drawer").classList.add("open"); $("#overlay").classList.add("open"); document.body.classList.add("no-scroll"); }
   function closeDrawer(){ $("#drawer").classList.remove("open"); $("#overlay").classList.remove("open"); document.body.classList.remove("no-scroll"); }
 
-  /* ================= CHECKOUT MODAL ================= */
-  function buildModal(){
-    var modal = el(
-      '<div class="modal" id="checkoutModal" role="dialog" aria-modal="true" aria-label="Finalizar pedido">'+
-        '<div class="modal__box" style="position:relative">'+
-          '<button class="icon-btn modal__close" id="modalClose" aria-label="Cerrar">'+IC.close+'</button>'+
-          '<h3>Finalizá tu pedido</h3>'+
-          '<p class="sub">Completá tus datos y te enviamos a WhatsApp con el resumen listo.</p>'+
-          '<div class="field"><label>¿Cómo lo recibís?</label>'+
-            '<div class="toggle-group"><button type="button" class="toggle-opt active" data-deliv="Envío a domicilio">Envío<small>1 a 7 días hábiles</small></button>'+
-            '<button type="button" class="toggle-opt" data-deliv="Retiro en local">Retiro<small>En nuestro local</small></button></div></div>'+
-          '<div class="field"><label for="ckName">Nombre y apellido</label><input id="ckName" type="text" placeholder="Tu nombre" autocomplete="name"></div>'+
-          '<div class="field" id="addrField"><label for="ckAddr">Dirección de envío / ciudad</label><input id="ckAddr" type="text" placeholder="Calle, barrio, ciudad" autocomplete="street-address"></div>'+
-          '<div class="field" id="mapField"><label>Marcá tu ubicación en el mapa</label>'+
-            '<div class="map-picker"><div id="ckMap"></div>'+
-              '<button type="button" class="map-geo" id="ckGeo" aria-label="Usar mi ubicación actual">'+IC.pin+' Usar mi ubicación</button>'+
-            '</div>'+
-            '<p class="map-hint" id="ckMapHint">Tocá el mapa o arrastrá el pin para marcar dónde entregamos.</p>'+
-          '</div>'+
-          '<div class="field"><label for="ckNote">Nota (opcional)</label><input id="ckNote" type="text" placeholder="Alguna aclaración"></div>'+
-          '<div class="ck-total"><span>Total a transferir</span><b id="ckTotal">Gs. 0</b></div>'+
-          '<div class="deposit-box"><b>Pago por depósito / transferencia bancaria</b>'+
-            '<div class="row"><span>'+BANK.banco+'</span><span>'+BANK.cuenta+'</span></div>'+
-            '<div class="row"><span>Titular</span><span>'+BANK.titular+'</span></div>'+
-            '<div class="row"><span>'+BANK.ci+'</span><span>Alias: '+BANK.alias+'</span></div>'+
-          '</div>'+
-          '<button class="btn btn--wa btn--block btn--lg" id="sendWa">'+IC.wa+' Enviar pedido por WhatsApp</button>'+
-        '</div>'+
-      '</div>');
-    document.body.appendChild(modal);
-    var deliv = "Envío a domicilio";
-    $$("#checkoutModal .toggle-opt").forEach(function(b){
-      b.addEventListener("click", function(){
-        $$("#checkoutModal .toggle-opt").forEach(function(x){x.classList.remove("active");});
-        b.classList.add("active"); deliv=b.getAttribute("data-deliv");
-        var isPickup = /Retiro/.test(deliv);
-        $("#addrField").style.display = isPickup?"none":"block";
-        $("#mapField").style.display = isPickup?"none":"block";
-        if(!isPickup) setTimeout(initMap, 60);
-      });
-    });
-    // ---- Map picker ----
-    var map=null, marker=null, pinIcon=null;
-    function setLoc(lat,lng,pan){
-      orderLoc={lat:lat,lng:lng};
-      if(marker){ marker.setLatLng([lat,lng]); }
-      if(map && pan){ map.panTo([lat,lng]); }
-      var h=$("#ckMapHint"); if(h){ h.innerHTML='✅ Ubicación marcada — <a href="https://maps.google.com/?q='+lat+','+lng+'" target="_blank" rel="noopener">ver en Google Maps</a>'; h.classList.add("set"); }
-    }
-    function initMap(){
-      var box=$("#ckMap"); if(!box) return;
-      loadLeaflet().then(function(){
-        if(!map){
-          map = L.map(box,{scrollWheelZoom:false}).setView(ASU, 13);
-          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map);
-          pinIcon = L.divIcon({className:"biofoods-pin", html:'<span>📍</span>', iconSize:[34,34], iconAnchor:[17,32]});
-          marker = L.marker(orderLoc?[orderLoc.lat,orderLoc.lng]:ASU, {draggable:true, icon:pinIcon}).addTo(map);
-          marker.on("dragend", function(){ var p=marker.getLatLng(); setLoc(p.lat,p.lng,false); });
-          map.on("click", function(e){ setLoc(e.latlng.lat,e.latlng.lng,false); });
-        }
-        [80,300,650].forEach(function(d){ setTimeout(function(){ if(map) map.invalidateSize(); }, d); });
-      }).catch(function(){
-        var h=$("#ckMapHint"); if(h) h.textContent="No se pudo cargar el mapa. Escribí tu dirección arriba y la coordinamos por WhatsApp.";
-      });
-    }
-    window.__initCheckoutMap = initMap;
-    $("#ckGeo").addEventListener("click", function(){
-      if(!navigator.geolocation){ return; }
-      var btn=this; btn.disabled=true; btn.textContent="Ubicando…";
-      navigator.geolocation.getCurrentPosition(function(pos){
-        loadLeaflet().then(function(){ if(map) map.setView([pos.coords.latitude,pos.coords.longitude],16); setLoc(pos.coords.latitude,pos.coords.longitude,true); });
-        btn.disabled=false; btn.innerHTML=IC.pin+" Usar mi ubicación";
-      }, function(){
-        btn.disabled=false; btn.innerHTML=IC.pin+" Usar mi ubicación";
-        var h=$("#ckMapHint"); if(h) h.textContent="No pudimos acceder a tu ubicación. Marcá el pin manualmente en el mapa.";
-      }, {enableHighAccuracy:true, timeout:8000});
-    });
-
-    $("#modalClose").addEventListener("click", closeCheckout);
-    $("#checkoutModal").addEventListener("click", function(e){ if(e.target.id==="checkoutModal") closeCheckout(); });
-    $("#sendWa").addEventListener("click", function(){
-      var name = $("#ckName").value.trim();
-      var addr = $("#ckAddr").value.trim();
-      var note = $("#ckNote").value.trim();
-      sendWhatsAppOrder(deliv, name, addr, note);
-    });
-    window.__getDeliv = function(){ return deliv; };
-  }
-
-  function openCheckout(){
-    if(!cart.length) return;
-    closeDrawer();
-    var t=$("#ckTotal"); if(t) t.textContent=money(cartTotal());
-    $("#checkoutModal").classList.add("open"); document.body.classList.add("no-scroll");
-    var mf=$("#mapField");
-    if(mf && mf.style.display!=="none" && window.__initCheckoutMap) setTimeout(window.__initCheckoutMap, 380);
-  }
-  function closeCheckout(){ $("#checkoutModal").classList.remove("open"); document.body.classList.remove("no-scroll"); }
-
+  /* ================= WhatsApp + EmailJS ================= */
   function waLink(text){ return "https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(text); }
 
-  function sendWhatsAppOrder(deliv, name, addr, note){
-    var lines = ["*Nuevo pedido — Biofoods* 🥜",""];
-    if(name) lines.push("👤 *Cliente:* "+name);
-    lines.push("📦 *Entrega:* "+deliv);
-    if(!/Retiro/.test(deliv) && addr) lines.push("📍 *Dirección:* "+addr);
-    if(!/Retiro/.test(deliv) && orderLoc) lines.push("🗺️ *Ubicación:* https://maps.google.com/?q="+orderLoc.lat+","+orderLoc.lng);
-    if(note) lines.push("📝 *Nota:* "+note);
-    lines.push("","*Detalle del pedido:*");
-    cart.forEach(function(i){
-      var p = byHandle(i.handle)||{title:i.handle};
-      lines.push("• "+i.qty+"× "+p.title+" ("+i.size+") — "+money(i.price*i.qty));
+  var emailjsPromise=null;
+  function loadEmailJS(){
+    if(window.emailjs) return Promise.resolve();
+    if(emailjsPromise) return emailjsPromise;
+    emailjsPromise=new Promise(function(res,rej){
+      var s=document.createElement("script");
+      s.src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js";
+      s.onload=res; s.onerror=rej; document.head.appendChild(s);
     });
-    lines.push("","💰 *Total: "+money(cartTotal())+"*");
-    lines.push("","Pago por depósito: "+BANK.banco+" "+BANK.cuenta+" ("+BANK.titular+")");
-    window.open(waLink(lines.join("\n")), "_blank");
+    return emailjsPromise;
+  }
+
+  function orderItemsText(){
+    return cart.map(function(i){ var p=byHandle(i.handle)||{title:i.handle}; return "• "+i.qty+"x "+p.title+" ("+i.size+") — "+money(i.price*i.qty); }).join("\n");
+  }
+  function orderWhatsAppText(d){
+    var L=["*Nuevo pedido — Biofoods* 🥜",""];
+    L.push("👤 *Cliente:* "+d.name+(d.phone?" — "+d.phone:""));
+    if(d.email) L.push("✉️ *Email:* "+d.email);
+    L.push("📦 *Entrega:* "+d.delivLabel);
+    if(d.deliv==="envio"){
+      if(d.city) L.push("🏙️ *Ciudad:* "+d.city+" ("+money(d.shipping)+")");
+      if(d.address) L.push("📍 *Dirección:* "+d.address);
+      if(orderLoc) L.push("🗺️ *Ubicación:* https://maps.google.com/?q="+orderLoc.lat+","+orderLoc.lng);
+    } else {
+      L.push("🏬 *Retiro:* "+PICKUP.office);
+    }
+    if(d.note) L.push("📝 *Nota:* "+d.note);
+    L.push("","*Detalle:*",orderItemsText());
+    L.push("","Subtotal: "+money(d.subtotal));
+    L.push("Envío: "+(d.deliv==="retiro"?"Gratis (retiro)":money(d.shipping)));
+    L.push("💰 *Total: "+money(d.total)+"*");
+    L.push("","Pago por depósito: "+BANK.banco+" "+BANK.cuenta+" ("+BANK.titular+") — Alias "+BANK.alias);
+    return L.join("\n");
+  }
+
+  /* ================= PAGE: CHECKOUT ================= */
+  function initCheckoutPage(){
+    var root=$("#checkoutRoot"); if(!root) return;
+    if(!cart.length){
+      root.innerHTML='<div class="container section empty-state"><span>🛒</span><p>Tu carrito está vacío.</p><a class="btn" href="catalogo.html" style="margin-top:1rem">Ir al catálogo</a></div>';
+      initReveal(); return;
+    }
+    var state={ deliv:"envio", city:null, shipping:0 };
+    var map=null, marker=null;
+
+    root.innerHTML =
+      '<div class="container checkout-wrap">'+
+        '<form class="checkout-form" id="ckForm" novalidate>'+
+          '<a class="back-link" href="catalogo.html">← Seguir comprando</a>'+
+          '<h1 class="checkout-h1">Finalizar pedido</h1>'+
+          '<section class="ck-card"><h2 class="ck-h2">Tus datos</h2>'+
+            '<div class="ck-row2">'+
+              '<div class="field"><label for="fName">Nombre *</label><input id="fName" type="text" autocomplete="given-name"></div>'+
+              '<div class="field"><label for="fLast">Apellido</label><input id="fLast" type="text" autocomplete="family-name"></div>'+
+            '</div>'+
+            '<div class="ck-row2">'+
+              '<div class="field"><label for="fEmail">Email *</label><input id="fEmail" type="email" autocomplete="email" placeholder="tucorreo@email.com"></div>'+
+              '<div class="field"><label for="fPhone">Teléfono *</label><input id="fPhone" type="tel" autocomplete="tel" placeholder="09xx xxx xxx"></div>'+
+            '</div>'+
+          '</section>'+
+          '<section class="ck-card"><h2 class="ck-h2">Entrega</h2>'+
+            '<div class="toggle-group"><button type="button" class="toggle-opt active" data-deliv="envio">Envío<small>Según tu ciudad</small></button>'+
+            '<button type="button" class="toggle-opt" data-deliv="retiro">Retiro<small>Gratis en el local</small></button></div>'+
+            '<div id="envioBlock">'+
+              '<p class="ck-label">Elegí tu ciudad / zona *</p>'+
+              '<div class="ship-list" id="shipList">'+
+                SHIPPING.map(function(s,i){return '<label class="ship-opt"><input type="radio" name="ship" value="'+i+'"><span class="ship-name">'+s.name+'</span><span class="ship-price">'+money(s.price)+'</span></label>';}).join("")+
+              '</div>'+
+              '<div class="field" style="margin-top:1.1rem"><label for="fAddr">Dirección *</label><input id="fAddr" type="text" placeholder="Calle, número, barrio" autocomplete="street-address"></div>'+
+              '<p class="ck-label">Marcá tu ubicación en el mapa</p>'+
+              '<div class="map-picker"><div id="ckMap"></div><button type="button" class="map-geo" id="ckGeo">'+IC.pin+' Usar mi ubicación</button></div>'+
+              '<p class="map-hint" id="ckMapHint">Tocá el mapa o arrastrá el pin para marcar dónde entregamos.</p>'+
+            '</div>'+
+            '<div id="retiroBlock" style="display:none">'+
+              '<div class="pickup-card">'+IC.pin+'<div><b>'+PICKUP.office+'</b><span>⏱ '+PICKUP.ready+' · Sin costo de envío</span></div></div>'+
+            '</div>'+
+          '</section>'+
+          '<section class="ck-card"><h2 class="ck-h2">Pago — Depósito / transferencia</h2>'+
+            '<div class="deposit-box"><div class="row"><span>'+BANK.banco+'</span><span>'+BANK.cuenta+'</span></div>'+
+              '<div class="row"><span>Titular</span><span>'+BANK.titular+'</span></div>'+
+              '<div class="row"><span>'+BANK.ci+'</span><span>Alias: '+BANK.alias+'</span></div></div>'+
+            '<p class="ck-note">Al confirmar te enviamos la confirmación por email y abrimos WhatsApp para que coordines la transferencia con el negocio.</p>'+
+            '<div class="field" style="margin-top:1rem"><label for="fNote">Nota (opcional)</label><input id="fNote" type="text" placeholder="Alguna aclaración"></div>'+
+          '</section>'+
+        '</form>'+
+        '<aside class="checkout-summary"><div class="summary-inner">'+
+          '<h2 class="ck-h2">Tu pedido</h2>'+
+          '<div class="summary-items" id="sumItems"></div>'+
+          '<div class="summary-line"><span>Subtotal</span><b id="sumSubtotal"></b></div>'+
+          '<div class="summary-line"><span>Envío</span><b id="sumShipping"></b></div>'+
+          '<div class="summary-total"><span>Total</span><b id="sumTotal"></b></div>'+
+          '<button class="btn btn--block btn--lg" id="placeOrder" type="submit" form="ckForm">Confirmar pedido</button>'+
+          '<p class="drawer__note" id="ckMsg">Recibirás la confirmación por email.</p>'+
+        '</div></aside>'+
+      '</div>';
+
+    $("#sumItems").innerHTML = cart.map(function(i){ var p=byHandle(i.handle)||{title:i.handle,images:[]}; var img=(p.images&&p.images[0])||"assets/img/logo-black.png";
+      return '<div class="sum-item"><img src="'+img+'" alt="'+esc(p.title)+'"><div><b>'+esc(p.title)+'</b><span>'+esc(i.size)+' × '+i.qty+'</span></div><em>'+money(i.price*i.qty)+'</em></div>'; }).join("");
+
+    function recompute(){
+      var sub=cartTotal();
+      var ship = state.deliv==="retiro"?0:(state.city!=null?state.shipping:null);
+      $("#sumSubtotal").textContent=money(sub);
+      $("#sumShipping").textContent = state.deliv==="retiro"?"Gratis":(ship==null?"A elegir":money(ship));
+      $("#sumTotal").textContent = money(sub + (ship||0));
+    }
+    recompute();
+
+    $$("#ckForm .toggle-opt").forEach(function(b){ b.addEventListener("click",function(){
+      $$("#ckForm .toggle-opt").forEach(function(x){x.classList.remove("active");}); b.classList.add("active");
+      state.deliv=b.getAttribute("data-deliv");
+      var envio=state.deliv==="envio";
+      $("#envioBlock").style.display=envio?"block":"none";
+      $("#retiroBlock").style.display=envio?"none":"block";
+      recompute();
+      if(envio) setTimeout(initMap,60);
+    }); });
+
+    $$("#shipList input[name=ship]").forEach(function(r){ r.addEventListener("change",function(){
+      var s=SHIPPING[+r.value]; state.city=s.name; state.shipping=s.price;
+      $$(".ship-opt").forEach(function(o){o.classList.remove("active");}); r.closest(".ship-opt").classList.add("active");
+      recompute();
+    }); });
+
+    function setLoc(lat,lng,pan){ orderLoc={lat:lat,lng:lng}; if(marker)marker.setLatLng([lat,lng]); if(map&&pan)map.panTo([lat,lng]);
+      var h=$("#ckMapHint"); if(h){h.innerHTML='✅ Ubicación marcada — <a href="https://maps.google.com/?q='+lat+','+lng+'" target="_blank" rel="noopener">ver en Google Maps</a>'; h.classList.add("set");} }
+    function initMap(){ var box=$("#ckMap"); if(!box) return; loadLeaflet().then(function(){
+      if(!map){ map=L.map(box,{scrollWheelZoom:false}).setView(ASU,13);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map);
+        var icon=L.divIcon({className:"biofoods-pin",html:'<span>📍</span>',iconSize:[34,34],iconAnchor:[17,32]});
+        marker=L.marker(orderLoc?[orderLoc.lat,orderLoc.lng]:ASU,{draggable:true,icon:icon}).addTo(map);
+        marker.on("dragend",function(){var p=marker.getLatLng();setLoc(p.lat,p.lng,false);});
+        map.on("click",function(e){setLoc(e.latlng.lat,e.latlng.lng,false);});
+      }
+      [80,300,650].forEach(function(d){setTimeout(function(){if(map)map.invalidateSize();},d);});
+    }).catch(function(){var h=$("#ckMapHint"); if(h)h.textContent="No se pudo cargar el mapa. Con tu dirección alcanza.";}); }
+    setTimeout(initMap,100);
+    $("#ckGeo").addEventListener("click",function(){ if(!navigator.geolocation)return; var btn=this; btn.disabled=true; btn.textContent="Ubicando…";
+      navigator.geolocation.getCurrentPosition(function(pos){ loadLeaflet().then(function(){ if(map)map.setView([pos.coords.latitude,pos.coords.longitude],16); setLoc(pos.coords.latitude,pos.coords.longitude,true);}); btn.disabled=false; btn.innerHTML=IC.pin+" Usar mi ubicación"; },
+      function(){ btn.disabled=false; btn.innerHTML=IC.pin+" Usar mi ubicación"; var h=$("#ckMapHint"); if(h)h.textContent="No pudimos acceder a tu ubicación. Marcá el pin manualmente."; }, {enableHighAccuracy:true,timeout:8000}); });
+
+    $("#ckForm").addEventListener("submit", function(e){ e.preventDefault(); submitOrder(); });
+
+    function submitOrder(){
+      var name=($("#fName").value.trim()+" "+$("#fLast").value.trim()).trim();
+      var email=$("#fEmail").value.trim();
+      var phone=$("#fPhone").value.trim();
+      var addr=$("#fAddr")?$("#fAddr").value.trim():"";
+      var note=$("#fNote").value.trim();
+      var err=null;
+      if(!$("#fName").value.trim()) err="Ingresá tu nombre.";
+      else if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) err="Ingresá un email válido.";
+      else if(!phone) err="Ingresá tu teléfono.";
+      else if(state.deliv==="envio" && state.city==null) err="Elegí tu ciudad / zona de envío.";
+      else if(state.deliv==="envio" && !addr) err="Ingresá tu dirección de envío.";
+      var m=$("#ckMsg");
+      if(err){ m.textContent=err; m.classList.add("err"); return; }
+      m.classList.remove("err");
+
+      var sub=cartTotal();
+      var shipping=state.deliv==="retiro"?0:state.shipping;
+      var d={ name:name, email:email, phone:phone, address:addr, note:note,
+        deliv:state.deliv, delivLabel: state.deliv==="retiro"?"Retiro en local":"Envío a domicilio",
+        city:state.city, subtotal:sub, shipping:shipping, total:sub+shipping };
+
+      var btn=$("#placeOrder"); btn.disabled=true; btn.textContent="Procesando…";
+      var wa = waLink(orderWhatsAppText(d));
+
+      function finish(emailed){
+        clearCart();
+        root.innerHTML = confirmationHTML(d, emailed, wa);
+        window.scrollTo(0,0);
+        initReveal();
+        try{ window.open(wa, "_blank"); }catch(e){}
+      }
+
+      if(emailjsReady()){
+        loadEmailJS().then(function(){
+          emailjs.init(EMAILJS.PUBLIC_KEY);
+          return emailjs.send(EMAILJS.SERVICE_ID, EMAILJS.TEMPLATE_ID, {
+            to_email: email, customer_name: name, customer_phone: phone,
+            delivery: d.delivLabel + (d.deliv==="envio" && d.city?(" — "+d.city):""),
+            address: addr, location_link: orderLoc?("https://maps.google.com/?q="+orderLoc.lat+","+orderLoc.lng):"",
+            order_summary: orderItemsText(), subtotal: money(sub), shipping_cost: (shipping?money(shipping):"Gratis"),
+            total: money(d.total), bank_info: BANK.banco+" "+BANK.cuenta+" ("+BANK.titular+") Alias "+BANK.alias, note: note
+          });
+        }).then(function(){ finish(true); }).catch(function(){ finish(false); });
+      } else {
+        finish(false);
+      }
+    }
+
+    function confirmationHTML(d, emailed, wa){
+      return '<div class="container section"><div class="ck-confirm" data-reveal>'+
+        '<div class="ck-confirm__ic">'+IC.check+'</div>'+
+        '<h1>¡Pedido confirmado!</h1>'+
+        '<p class="lead" style="margin-inline:auto">Gracias '+esc(d.name)+'. '+(emailed?('Te enviamos la confirmación a <b>'+esc(d.email)+'</b>.'):('Registramos tu pedido.'))+' Para completar la compra, coordiná la transferencia por WhatsApp.</p>'+
+        '<div class="ck-confirm__box">'+
+          '<div class="row"><span>Entrega</span><span>'+esc(d.delivLabel)+(d.deliv==="envio" && d.city?(" — "+esc(d.city)):"")+'</span></div>'+
+          '<div class="row"><span>Total a transferir</span><b>'+money(d.total)+'</b></div>'+
+          '<div class="row"><span>'+BANK.banco+'</span><span>'+BANK.cuenta+' · Alias '+BANK.alias+'</span></div>'+
+        '</div>'+
+        '<a class="btn btn--wa btn--lg" href="'+wa+'" target="_blank" rel="noopener">'+IC.wa+' Confirmar por WhatsApp</a>'+
+        '<a class="link-arrow" href="index.html" style="margin-top:1.4rem">Volver al inicio →</a>'+
+      '</div></div>';
+    }
+
+    initReveal();
   }
 
   /* ================= WhatsApp float + toast ================= */
@@ -421,12 +540,15 @@
           '<b>'+c.label+'</b><small>'+count+' productos</small></a>';
       }).join("");
     }
-    // featured (a curated selection)
+    // featured — auto-scrolling carousel (duplicated set for seamless loop)
     var featRoot = $("#homeFeatured");
     if(featRoot){
-      var picks = ["mix-keto","almendras-banadas-en-chocolate-sin-azucar","castanas-de-caju","datiles-con-carozo","spirulina-100-puro","nuez-mariposa","arandanos-rojos","harina-de-almendras-sin-piel"];
+      var picks = ["mix-keto","almendras-banadas-en-chocolate-sin-azucar","castanas-de-caju","datiles-con-carozo","spirulina-100-puro","nuez-mariposa","arandanos-rojos","harina-de-almendras-sin-piel","mix-antioxidante","pistachos"];
       var feat = picks.map(byHandle).filter(Boolean);
-      featRoot.innerHTML = feat.map(cardHTML).join("");
+      var cardsHTML = feat.map(cardHTML).join("");
+      featRoot.innerHTML = cardsHTML + cardsHTML; // duplicate for seamless marquee
+      featRoot.style.setProperty("--marquee-duration", (feat.length*6)+"s");
+      featRoot.setAttribute("aria-label","Productos destacados");
     }
     // combos
     var comboRoot = $("#homeCombos");
@@ -560,12 +682,13 @@
 
   /* ================= INIT ================= */
   function init(){
-    buildHeader(); buildFooter(); buildDrawer(); buildModal(); buildFloat();
+    buildHeader(); buildFooter(); buildDrawer(); buildFloat();
     syncCart();
     var page = document.body.getAttribute("data-page");
     if(page==="home") initHome();
     else if(page==="catalog") initCatalog();
     else if(page==="product") initProduct();
+    else if(page==="checkout") initCheckoutPage();
     else initReveal();
   }
   if(document.readyState==="loading") document.addEventListener("DOMContentLoaded", init); else init();
