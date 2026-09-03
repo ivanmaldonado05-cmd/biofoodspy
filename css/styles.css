@@ -176,7 +176,7 @@ p{text-wrap:pretty}
 .hero__stat b{font-family:var(--font-display);font-size:1.9rem;color:var(--forest);display:block;line-height:1}
 .hero__stat span{font-size:.82rem;color:var(--muted);font-weight:600}
 .hero__visual{position:relative}
-.hero__visual img{width:100%;border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);object-fit:cover;aspect-ratio:4/5}
+.hero__visual img,.hero__visual video{width:100%;border-radius:var(--radius-xl);box-shadow:var(--shadow-lg);object-fit:cover;aspect-ratio:4/5;display:block}
 .hero__badge{position:absolute;bottom:-18px;left:-18px;background:var(--white);border-radius:20px;
   padding:1rem 1.2rem;box-shadow:var(--shadow-md);display:flex;align-items:center;gap:.75rem;max-width:230px}
 .hero__badge .dot{width:42px;height:42px;border-radius:12px;background:var(--cream-2);display:grid;place-items:center;font-size:1.4rem;flex-shrink:0}
