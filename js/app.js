@@ -611,7 +611,7 @@
     if(!p){ root.innerHTML='<div class="container section empty-state"><span>😕</span><p>Producto no encontrado.</p><a class="btn" href="catalogo.html" style="margin-top:1rem">Volver al catálogo</a></div>'; initReveal(); return; }
     document.title = p.title + " — Biofoods Paraguay";
 
-    var selVar = p.variants[0];
+    var selVar = p.variants[0] || {size:"", price:0};
     var imgs = p.images.length?p.images:["assets/img/logo-black.png"];
 
     root.innerHTML =
@@ -628,11 +628,15 @@
           '<div class="pd-price" id="pdPrice">'+money(selVar.price)+'</div>'+
           (p.variants.length>1?'<div class="pd-section-label">'+esc(p.sizeName||"Tamaño")+'</div><div class="size-opts" id="pdSizes">'+
             p.variants.map(function(v,i){return '<button class="size-opt '+(i===0?"active":"")+'" data-i="'+i+'">'+esc(v.size)+'<small>'+money(v.price)+'</small></button>';}).join("")+'</div>':'')+
-          '<div class="pd-section-label">Cantidad</div>'+
-          '<div class="pd-buy">'+
-            '<div class="qty"><button id="qtyMinus" aria-label="Menos">−</button><input id="qtyInput" type="text" value="1" inputmode="numeric" aria-label="Cantidad"><button id="qtyPlus" aria-label="Más">+</button></div>'+
-            '<button class="btn btn--lg" id="pdAdd" style="flex:1">'+IC.cart+' Agregar al pedido</button>'+
-          '</div>'+
+          (selVar.price>0 ?
+            '<div class="pd-section-label">Cantidad</div>'+
+            '<div class="pd-buy">'+
+              '<div class="qty"><button id="qtyMinus" aria-label="Menos">−</button><input id="qtyInput" type="text" value="1" inputmode="numeric" aria-label="Cantidad"><button id="qtyPlus" aria-label="Más">+</button></div>'+
+              '<button class="btn btn--lg" id="pdAdd" style="flex:1">'+IC.cart+' Agregar al pedido</button>'+
+            '</div>'
+          :
+            '<div class="pd-buy"><a class="btn btn--wa btn--lg btn--block" href="'+waLink("Hola! Quiero armar mi "+p.title)+'" target="_blank" rel="noopener">'+IC.wa+' Consultar por WhatsApp</a></div>'
+          )+
           '<div class="pd-meta">'+
             '<div>'+IC.truck+'<span>Envíos a todo el país (1 a 7 días hábiles) o retiro en local.</span></div>'+
             '<div>'+IC.check+'<span>Producto natural, seleccionado y fraccionado con cuidado.</span></div>'+
@@ -656,18 +660,18 @@
         $("#pdPrice").textContent=money(selVar.price);
       });
     });
-    // qty
+    // qty + add (only for products with a price)
     var qi=$("#qtyInput");
     function getQty(){ var n=parseInt(qi.value,10); return (isNaN(n)||n<1)?1:n; }
-    $("#qtyMinus").addEventListener("click",function(){ qi.value=Math.max(1,getQty()-1); });
-    $("#qtyPlus").addEventListener("click",function(){ qi.value=getQty()+1; });
-    qi.addEventListener("blur",function(){ qi.value=getQty(); });
-    // add
-    $("#pdAdd").addEventListener("click",function(){
-      if(!selVar.price){ window.open(waLink("Hola! Quiero consultar por "+p.title),"_blank"); return; }
-      addToCart(p.handle, selVar.size, selVar.price, getQty());
-      showToast("Agregado al pedido");
-    });
+    if(qi && $("#pdAdd")){
+      $("#qtyMinus").addEventListener("click",function(){ qi.value=Math.max(1,getQty()-1); });
+      $("#qtyPlus").addEventListener("click",function(){ qi.value=getQty()+1; });
+      qi.addEventListener("blur",function(){ qi.value=getQty(); });
+      $("#pdAdd").addEventListener("click",function(){
+        addToCart(p.handle, selVar.size, selVar.price, getQty());
+        showToast("Agregado al pedido");
+      });
+    }
 
     // related
     var relRoot = $("#relatedGrid");
