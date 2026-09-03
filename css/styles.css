@@ -199,7 +199,6 @@ p{text-wrap:pretty}
   mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
 .carousel__track{display:flex;width:max-content;padding-block:1.2rem;will-change:transform;
   animation:marquee var(--marquee-duration,48s) linear infinite}
-.carousel:hover .carousel__track,.carousel:focus-within .carousel__track{animation-play-state:paused}
 .carousel .card{flex:0 0 clamp(238px,26vw,296px);width:clamp(238px,26vw,296px);margin-right:clamp(1rem,2vw,1.6rem)}
 
 /* ---------- Background decorations ---------- */
