@@ -179,7 +179,6 @@
         '<div class="mobile-nav__top"><a class="brand" href="index.html"><img src="assets/img/logo-black.png" alt="Biofoods"><span class="brand__text"><span class="brand__name">Biofoods</span><span class="brand__tag">Paraguay</span></span></a>'+
         '<button class="icon-btn" id="mnavClose" aria-label="Cerrar menú">'+IC.close+'</button></div>'+
         '<div class="mobile-nav__scroll">'+ mobileNavHTML() +'</div>'+
-        '<div class="mobile-nav__footer"><a class="btn btn--wa btn--block" href="'+waLink("Hola Biofoods! Quiero hacer una consulta 🥜")+'" target="_blank" rel="noopener">'+IC.wa+' Escribir por WhatsApp</a></div>'+
       '</div>');
     document.body.appendChild(mnav);
     // mobile categories accordion
