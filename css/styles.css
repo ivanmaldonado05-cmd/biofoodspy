@@ -367,7 +367,21 @@ p{text-wrap:pretty}
 .toggle-opt small{display:block;font-weight:600;font-size:.75rem;color:var(--muted);margin-top:.15rem}
 .toggle-opt.active{border-color:var(--forest);background:var(--forest);color:var(--cream)}
 .toggle-opt.active small{color:#cddac8}
-.deposit-box{background:var(--white);border:1px dashed var(--sand-line);border-radius:14px;padding:1rem 1.1rem;font-size:.85rem;margin:1.2rem 0}
+.map-picker{position:relative;border-radius:14px;overflow:hidden;border:1.6px solid var(--sand-line)}
+#ckMap{height:220px;width:100%;background:var(--cream-2);z-index:1}
+.map-geo{position:absolute;top:10px;right:10px;z-index:400;display:inline-flex;align-items:center;gap:.4rem;
+  background:var(--white);color:var(--forest);font-weight:700;font-size:.8rem;padding:.5rem .8rem;border-radius:100px;box-shadow:var(--shadow-md)}
+.map-geo:hover{background:var(--forest);color:var(--cream)}
+.map-geo svg{width:16px;height:16px}
+.map-hint{font-size:.78rem;color:var(--muted);margin-top:.5rem}
+.map-hint.set{color:var(--forest);font-weight:600}
+.map-hint a{color:var(--amber-600);font-weight:700;text-decoration:underline}
+.biofoods-pin{background:none;border:none;font-size:26px;line-height:1;text-align:center;filter:drop-shadow(0 2px 3px rgba(0,0,0,.3))}
+.ck-total{display:flex;justify-content:space-between;align-items:center;background:var(--forest);color:var(--cream);
+  border-radius:14px;padding:.9rem 1.1rem;margin-top:1.2rem}
+.ck-total span{font-weight:700;font-size:.9rem}
+.ck-total b{font-family:var(--font-display);font-size:1.5rem;color:var(--cream)}
+.deposit-box{background:var(--white);border:1px dashed var(--sand-line);border-radius:14px;padding:1rem 1.1rem;font-size:.85rem;margin:.7rem 0 1.2rem}
 .deposit-box b{color:var(--forest)}
 .deposit-box .row{display:flex;justify-content:space-between;gap:1rem;padding:.15rem 0}
 .deposit-box .row span:last-child{font-weight:700;color:var(--ink)}

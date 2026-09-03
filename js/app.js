@@ -58,6 +58,25 @@
   };
 
   /* ================= CART ================= */
+  /* ---------- Location (delivery map) ---------- */
+  var orderLoc = null; // {lat,lng}
+  var leafletPromise = null;
+  var ASU = [-25.2921, -57.6106]; // Asunción centro aprox.
+  function loadLeaflet(){
+    if(window.L) return Promise.resolve();
+    if(leafletPromise) return leafletPromise;
+    leafletPromise = new Promise(function(resolve, reject){
+      var css = document.createElement("link");
+      css.rel="stylesheet"; css.href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      document.head.appendChild(css);
+      var s = document.createElement("script");
+      s.src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+      s.onload=resolve; s.onerror=reject;
+      document.head.appendChild(s);
+    });
+    return leafletPromise;
+  }
+
   var CART_KEY = "biofoods_cart_v1";
   function loadCart(){ try{ return JSON.parse(localStorage.getItem(CART_KEY))||[]; }catch(e){ return []; } }
   function saveCart(c){ try{ localStorage.setItem(CART_KEY, JSON.stringify(c)); }catch(e){} }
@@ -237,7 +256,14 @@
             '<button type="button" class="toggle-opt" data-deliv="Retiro en local">Retiro<small>En nuestro local</small></button></div></div>'+
           '<div class="field"><label for="ckName">Nombre y apellido</label><input id="ckName" type="text" placeholder="Tu nombre" autocomplete="name"></div>'+
           '<div class="field" id="addrField"><label for="ckAddr">Dirección de envío / ciudad</label><input id="ckAddr" type="text" placeholder="Calle, barrio, ciudad" autocomplete="street-address"></div>'+
+          '<div class="field" id="mapField"><label>Marcá tu ubicación en el mapa</label>'+
+            '<div class="map-picker"><div id="ckMap"></div>'+
+              '<button type="button" class="map-geo" id="ckGeo" aria-label="Usar mi ubicación actual">'+IC.pin+' Usar mi ubicación</button>'+
+            '</div>'+
+            '<p class="map-hint" id="ckMapHint">Tocá el mapa o arrastrá el pin para marcar dónde entregamos.</p>'+
+          '</div>'+
           '<div class="field"><label for="ckNote">Nota (opcional)</label><input id="ckNote" type="text" placeholder="Alguna aclaración"></div>'+
+          '<div class="ck-total"><span>Total a transferir</span><b id="ckTotal">Gs. 0</b></div>'+
           '<div class="deposit-box"><b>Pago por depósito / transferencia bancaria</b>'+
             '<div class="row"><span>'+BANK.banco+'</span><span>'+BANK.cuenta+'</span></div>'+
             '<div class="row"><span>Titular</span><span>'+BANK.titular+'</span></div>'+
@@ -252,9 +278,49 @@
       b.addEventListener("click", function(){
         $$("#checkoutModal .toggle-opt").forEach(function(x){x.classList.remove("active");});
         b.classList.add("active"); deliv=b.getAttribute("data-deliv");
-        $("#addrField").style.display = /Retiro/.test(deliv)?"none":"block";
+        var isPickup = /Retiro/.test(deliv);
+        $("#addrField").style.display = isPickup?"none":"block";
+        $("#mapField").style.display = isPickup?"none":"block";
+        if(!isPickup) setTimeout(initMap, 60);
       });
     });
+    // ---- Map picker ----
+    var map=null, marker=null, pinIcon=null;
+    function setLoc(lat,lng,pan){
+      orderLoc={lat:lat,lng:lng};
+      if(marker){ marker.setLatLng([lat,lng]); }
+      if(map && pan){ map.panTo([lat,lng]); }
+      var h=$("#ckMapHint"); if(h){ h.innerHTML='✅ Ubicación marcada — <a href="https://maps.google.com/?q='+lat+','+lng+'" target="_blank" rel="noopener">ver en Google Maps</a>'; h.classList.add("set"); }
+    }
+    function initMap(){
+      var box=$("#ckMap"); if(!box) return;
+      loadLeaflet().then(function(){
+        if(!map){
+          map = L.map(box,{scrollWheelZoom:false}).setView(ASU, 13);
+          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(map);
+          pinIcon = L.divIcon({className:"biofoods-pin", html:'<span>📍</span>', iconSize:[34,34], iconAnchor:[17,32]});
+          marker = L.marker(orderLoc?[orderLoc.lat,orderLoc.lng]:ASU, {draggable:true, icon:pinIcon}).addTo(map);
+          marker.on("dragend", function(){ var p=marker.getLatLng(); setLoc(p.lat,p.lng,false); });
+          map.on("click", function(e){ setLoc(e.latlng.lat,e.latlng.lng,false); });
+        }
+        [80,300,650].forEach(function(d){ setTimeout(function(){ if(map) map.invalidateSize(); }, d); });
+      }).catch(function(){
+        var h=$("#ckMapHint"); if(h) h.textContent="No se pudo cargar el mapa. Escribí tu dirección arriba y la coordinamos por WhatsApp.";
+      });
+    }
+    window.__initCheckoutMap = initMap;
+    $("#ckGeo").addEventListener("click", function(){
+      if(!navigator.geolocation){ return; }
+      var btn=this; btn.disabled=true; btn.textContent="Ubicando…";
+      navigator.geolocation.getCurrentPosition(function(pos){
+        loadLeaflet().then(function(){ if(map) map.setView([pos.coords.latitude,pos.coords.longitude],16); setLoc(pos.coords.latitude,pos.coords.longitude,true); });
+        btn.disabled=false; btn.innerHTML=IC.pin+" Usar mi ubicación";
+      }, function(){
+        btn.disabled=false; btn.innerHTML=IC.pin+" Usar mi ubicación";
+        var h=$("#ckMapHint"); if(h) h.textContent="No pudimos acceder a tu ubicación. Marcá el pin manualmente en el mapa.";
+      }, {enableHighAccuracy:true, timeout:8000});
+    });
+
     $("#modalClose").addEventListener("click", closeCheckout);
     $("#checkoutModal").addEventListener("click", function(e){ if(e.target.id==="checkoutModal") closeCheckout(); });
     $("#sendWa").addEventListener("click", function(){
@@ -266,7 +332,14 @@
     window.__getDeliv = function(){ return deliv; };
   }
 
-  function openCheckout(){ if(!cart.length) return; closeDrawer(); $("#checkoutModal").classList.add("open"); document.body.classList.add("no-scroll"); }
+  function openCheckout(){
+    if(!cart.length) return;
+    closeDrawer();
+    var t=$("#ckTotal"); if(t) t.textContent=money(cartTotal());
+    $("#checkoutModal").classList.add("open"); document.body.classList.add("no-scroll");
+    var mf=$("#mapField");
+    if(mf && mf.style.display!=="none" && window.__initCheckoutMap) setTimeout(window.__initCheckoutMap, 380);
+  }
   function closeCheckout(){ $("#checkoutModal").classList.remove("open"); document.body.classList.remove("no-scroll"); }
 
   function waLink(text){ return "https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(text); }
@@ -276,6 +349,7 @@
     if(name) lines.push("👤 *Cliente:* "+name);
     lines.push("📦 *Entrega:* "+deliv);
     if(!/Retiro/.test(deliv) && addr) lines.push("📍 *Dirección:* "+addr);
+    if(!/Retiro/.test(deliv) && orderLoc) lines.push("🗺️ *Ubicación:* https://maps.google.com/?q="+orderLoc.lat+","+orderLoc.lng);
     if(note) lines.push("📝 *Nota:* "+note);
     lines.push("","*Detalle del pedido:*");
     cart.forEach(function(i){
