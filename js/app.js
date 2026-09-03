@@ -535,9 +535,8 @@
         var img = sample?sample.images[0]:"assets/img/logo-black.png";
         var count = CATALOG.filter(function(p){return p.category===c.slug;}).length;
         return '<a class="cat-tile" href="catalogo.html?cat='+c.slug+'" data-reveal data-delay="'+(idx%4)+'">'+
-          '<img loading="lazy" src="'+img+'" alt="'+c.label+'">'+
-          '<span class="arrow">'+IC.arrow+'</span>'+
-          '<b>'+c.label+'</b><small>'+count+' productos</small></a>';
+          '<div class="cat-tile__img"><img loading="lazy" src="'+img+'" alt="'+c.label+'"><span class="arrow">'+IC.arrow+'</span></div>'+
+          '<div class="cat-tile__cap"><b>'+c.label+'</b><small>'+count+' productos</small></div></a>';
       }).join("");
     }
     // featured — auto-scrolling carousel (duplicated set for seamless loop)
