@@ -213,17 +213,17 @@ p{text-wrap:pretty}
 
 /* ---------- Category tiles ---------- */
 .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
-.cat-tile{position:relative;border-radius:var(--radius-lg);overflow:hidden;background:var(--forest);
-  aspect-ratio:5/4;display:flex;flex-direction:column;justify-content:flex-end;padding:1.3rem;
+.cat-tile{position:relative;border-radius:var(--radius);overflow:hidden;background:var(--forest);
+  aspect-ratio:16/9;display:flex;flex-direction:column;justify-content:flex-end;padding:1rem;
   color:var(--cream);isolation:isolate;transition:transform .35s var(--ease),box-shadow .35s var(--ease)}
 .cat-tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .6s var(--ease)}
 .cat-tile::after{content:"";position:absolute;inset:0;z-index:-1;
   background:linear-gradient(to top,rgba(20,41,27,.82) 8%,rgba(20,41,27,.15) 60%,rgba(20,41,27,.35))}
 .cat-tile:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg)}
 .cat-tile:hover img{transform:scale(1.08)}
-.cat-tile b{font-family:var(--font-display);font-size:1.2rem;line-height:1.1}
-.cat-tile small{font-size:.78rem;opacity:.82;font-weight:600;margin-top:.15rem}
-.cat-tile .arrow{position:absolute;top:1rem;right:1rem;width:34px;height:34px;border-radius:50%;
+.cat-tile b{font-family:var(--font-display);font-size:1.05rem;line-height:1.05}
+.cat-tile small{font-size:.72rem;opacity:.82;font-weight:600;margin-top:.1rem}
+.cat-tile .arrow{position:absolute;top:.7rem;right:.7rem;width:30px;height:30px;border-radius:50%;
   background:rgba(251,247,238,.16);backdrop-filter:blur(4px);display:grid;place-items:center;
   transition:background .3s,transform .3s}
 .cat-tile:hover .arrow{background:var(--amber);color:#3a2a08;transform:rotate(-45deg)}
