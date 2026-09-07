@@ -588,9 +588,41 @@
     initReveal();
   }
 
+  /* ================= BOTANICAL DECO ================= */
+  var DECO_LEAF='<svg viewBox="0 0 64 96" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M32 96 C32 64 32 40 32 6" stroke="currentColor" stroke-width="2" fill="none" opacity=".7"/><path d="M32 34 C12 30 6 16 8 4 C24 6 36 18 32 34Z"/><path d="M32 52 C52 48 58 34 56 22 C40 24 28 36 32 52Z"/><path d="M32 70 C14 66 8 54 10 42 C26 44 36 56 32 70Z"/></svg>';
+  var DECO_SPRIG='<svg viewBox="0 0 96 60" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M6 30 C40 30 70 30 92 30" stroke="currentColor" stroke-width="2" fill="none" opacity=".65"/><path d="M40 30 C36 14 22 8 10 10 C12 24 26 32 40 30Z"/><path d="M64 30 C60 46 46 52 34 50 C36 36 50 28 64 30Z"/><path d="M84 30 C80 16 68 12 58 14 C60 26 72 32 84 30Z"/></svg>';
+  var DECO_SEED='<svg viewBox="0 0 40 56" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><ellipse cx="20" cy="28" rx="12" ry="20"/><path d="M20 10 Q26 28 20 46" stroke="var(--cream)" stroke-width="2" fill="none"/></svg>';
+  var DECO_ITEMS=[
+    {t:"3%",l:"1%",w:58,rot:-14,m:"sprig"},{t:"8%",r:"2%",w:44,rot:18,m:"seed",amber:1},
+    {t:"15%",l:"3%",w:38,rot:24,m:"leaf"},{t:"22%",r:"3%",w:60,rot:-20,m:"leaf"},
+    {t:"30%",l:"2%",w:42,rot:12,m:"seed"},{t:"37%",r:"1%",w:54,rot:-8,m:"sprig",amber:1},
+    {t:"45%",l:"4%",w:46,rot:30,m:"leaf"},{t:"52%",r:"3%",w:40,rot:-24,m:"seed"},
+    {t:"60%",l:"1%",w:56,rot:16,m:"leaf",amber:1},{t:"67%",r:"2%",w:46,rot:-14,m:"sprig"},
+    {t:"74%",l:"3%",w:40,rot:22,m:"seed"},{t:"81%",r:"4%",w:58,rot:-18,m:"leaf"},
+    {t:"88%",l:"2%",w:42,rot:10,m:"seed",amber:1},{t:"95%",r:"2%",w:50,rot:-26,m:"leaf"}
+  ];
+  function motifSVG(m){ return m==="seed"?DECO_SEED : m==="sprig"?DECO_SPRIG : DECO_LEAF; }
+  function buildLeafField(host){
+    if(!host || host.querySelector(".leaf-field")) return;
+    var field=document.createElement("div"); field.className="leaf-field"; field.setAttribute("aria-hidden","true");
+    field.innerHTML=
+      '<div class="blob" style="width:460px;height:460px;top:5%;left:-160px;background:radial-gradient(circle,rgba(60,102,80,.20),transparent 70%)"></div>'+
+      '<div class="blob" style="width:400px;height:400px;top:38%;right:-150px;background:radial-gradient(circle,rgba(217,153,49,.14),transparent 70%)"></div>'+
+      '<div class="blob" style="width:420px;height:420px;top:72%;left:-150px;background:radial-gradient(circle,rgba(60,102,80,.16),transparent 70%)"></div>';
+    DECO_ITEMS.forEach(function(it,i){
+      var d=document.createElement("div"); d.className="lf"+(it.amber?" amber":"");
+      d.style.top=it.t; if(it.l!=null) d.style.left=it.l; if(it.r!=null) d.style.right=it.r;
+      d.style.width=it.w+"px"; d.style.setProperty("--r",(it.rot||0)+"deg");
+      d.style.animationDelay=(i*0.55).toFixed(2)+"s"; d.style.animationDuration=(7+(i%5))+"s";
+      d.innerHTML=motifSVG(it.m); field.appendChild(d);
+    });
+    host.insertBefore(field, host.firstChild);
+  }
+
   /* ================= PAGE: CATALOG ================= */
   function initCatalog(){
     var grid = $("#catalogGrid"); if(!grid) return;
+    buildLeafField(document.querySelector("main"));
     var params = new URLSearchParams(location.search);
     var state = { cat: params.get("cat")||"all", q:"", sort:"featured" };
 

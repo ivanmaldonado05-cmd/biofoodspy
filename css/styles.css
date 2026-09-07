@@ -236,7 +236,27 @@ p{text-wrap:pretty}
 .deco-seeds--left{left:0}
 .deco-seeds--right{right:0}
 @media (max-width:900px){.deco-seeds{width:70px;opacity:.1}}
-@media (max-width:640px){.deco-seeds{display:none}}
+@media (max-width:640px){.deco-seeds{width:40px;opacity:.14}}
+
+/* Botanical scattered field (catálogo throughout) */
+body[data-page="catalog"]{background:
+  radial-gradient(1100px 560px at 100% 4%, rgba(217,153,49,.09), transparent 58%),
+  radial-gradient(1000px 720px at 0% 32%, rgba(60,102,80,.11), transparent 55%),
+  radial-gradient(900px 620px at 100% 62%, rgba(60,102,80,.08), transparent 55%),
+  radial-gradient(1000px 640px at 0% 92%, rgba(217,153,49,.07), transparent 55%),
+  var(--cream);background-attachment:fixed}
+body[data-page="catalog"] main{position:relative}
+body[data-page="catalog"] main > section{position:relative;z-index:1}
+.leaf-field{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.leaf-field .blob{position:absolute;border-radius:50%;filter:blur(70px)}
+.leaf-field .lf{position:absolute;color:var(--forest);opacity:.12;
+  animation:sway 8s var(--ease) infinite;will-change:transform}
+.leaf-field .lf.amber{color:var(--amber);opacity:.16}
+.leaf-field .lf svg{width:100%;height:auto;display:block}
+@keyframes sway{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}
+  50%{transform:translateY(-16px) rotate(calc(var(--r,0deg) + 6deg))}}
+@media (max-width:560px){.leaf-field .lf{opacity:.07}.leaf-field .lf.amber{opacity:.1}}
+@media (prefers-reduced-motion:reduce){.leaf-field .lf{animation:none}}
 
 /* ---------- Category tiles ---------- */
 .cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
