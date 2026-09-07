@@ -542,6 +542,21 @@
 
   /* ================= PAGE: HOME ================= */
   function initHome(){
+    // hero video: load desktop or mobile source based on viewport width
+    var hv = $("#heroVideo");
+    if(hv){
+      var applyHeroSrc = function(){
+        var w = window.innerWidth || document.documentElement.clientWidth || 1024; // 0 => assume desktop
+        var src = hv.getAttribute(w >= 768 ? "data-desktop" : "data-mobile");
+        if(src && hv.getAttribute("src")!==src){
+          hv.setAttribute("src", src); hv.load();
+          var pl=hv.play(); if(pl&&pl.catch) pl.catch(function(){});
+        }
+      };
+      applyHeroSrc();
+      window.addEventListener("resize", applyHeroSrc, {passive:true});
+      window.addEventListener("orientationchange", applyHeroSrc);
+    }
     // categories
     var catRoot = $("#homeCats");
     if(catRoot){
