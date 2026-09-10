@@ -366,7 +366,11 @@
             '<div class="deposit-box"><div class="row"><span>'+BANK.banco+'</span><span>'+BANK.cuenta+'</span></div>'+
               '<div class="row"><span>Titular</span><span>'+BANK.titular+'</span></div>'+
               '<div class="row"><span>'+BANK.ci+'</span><span>Alias: '+BANK.alias+'</span></div></div>'+
-            '<p class="ck-note">Al confirmar te enviamos la confirmación por email y abrimos WhatsApp para que coordines la transferencia con el negocio.</p>'+
+            '<p class="ck-note">Realizá la transferencia a la cuenta de arriba y adjuntá tu comprobante para confirmar el pedido.</p>'+
+            '<div class="field ck-upload"><label for="fProof">Comprobante de transferencia * <small>(imagen o PDF · máx. 10 MB)</small></label>'+
+              '<input id="fProof" type="file" accept="image/*,application/pdf">'+
+              '<p class="upload-name" id="proofName">Ningún archivo seleccionado</p>'+
+            '</div>'+
             '<div class="field" style="margin-top:1rem"><label for="fNote">Nota (opcional)</label><input id="fNote" type="text" placeholder="Alguna aclaración"></div>'+
           '</section>'+
         '</form>'+
@@ -426,6 +430,13 @@
       navigator.geolocation.getCurrentPosition(function(pos){ loadLeaflet().then(function(){ if(map)map.setView([pos.coords.latitude,pos.coords.longitude],16); setLoc(pos.coords.latitude,pos.coords.longitude,true);}); btn.disabled=false; btn.innerHTML=IC.pin+" Usar mi ubicación"; },
       function(){ btn.disabled=false; btn.innerHTML=IC.pin+" Usar mi ubicación"; var h=$("#ckMapHint"); if(h)h.textContent="No pudimos acceder a tu ubicación. Marcá el pin manualmente."; }, {enableHighAccuracy:true,timeout:8000}); });
 
+    var proofEl=$("#fProof");
+    if(proofEl){ proofEl.addEventListener("change",function(){
+      var f=proofEl.files&&proofEl.files[0]; var pn=$("#proofName");
+      pn.textContent=f?("📎 "+f.name):"Ningún archivo seleccionado";
+      pn.classList.toggle("has", !!f);
+    }); }
+
     $("#ckForm").addEventListener("submit", function(e){ e.preventDefault(); submitOrder(); });
 
     function submitOrder(){
@@ -434,12 +445,16 @@
       var phone=$("#fPhone").value.trim();
       var addr=$("#fAddr")?$("#fAddr").value.trim():"";
       var note=$("#fNote").value.trim();
+      var proofInput=$("#fProof"); var proof=proofInput&&proofInput.files&&proofInput.files[0];
       var err=null;
       if(!$("#fName").value.trim()) err="Ingresá tu nombre.";
       else if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) err="Ingresá un email válido.";
       else if(!phone) err="Ingresá tu teléfono.";
       else if(state.deliv==="envio" && state.city==null) err="Elegí tu ciudad / zona de envío.";
       else if(state.deliv==="envio" && !addr) err="Ingresá tu dirección de envío.";
+      else if(!proof) err="Adjuntá tu comprobante de transferencia.";
+      else if(!/^image\//.test(proof.type) && proof.type!=="application/pdf") err="El comprobante debe ser una imagen o un PDF.";
+      else if(proof.size>10*1024*1024) err="El comprobante supera los 10 MB.";
       var m=$("#ckMsg");
       if(err){ m.textContent=err; m.classList.add("err"); return; }
       m.classList.remove("err");
@@ -451,14 +466,12 @@
         city:state.city, subtotal:sub, shipping:shipping, total:sub+shipping };
 
       var btn=$("#placeOrder"); btn.disabled=true; btn.textContent="Procesando…";
-      var wa = waLink(orderWhatsAppText(d));
 
       function finish(emailed){
         clearCart();
-        root.innerHTML = confirmationHTML(d, emailed, wa);
+        root.innerHTML = confirmationHTML(d, emailed);
         window.scrollTo(0,0);
         initReveal();
-        try{ window.open(wa, "_blank"); }catch(e){}
       }
 
       if(emailjsReady()){
@@ -477,18 +490,17 @@
       }
     }
 
-    function confirmationHTML(d, emailed, wa){
+    function confirmationHTML(d, emailed){
       return '<div class="container section"><div class="ck-confirm" data-reveal>'+
         '<div class="ck-confirm__ic">'+IC.check+'</div>'+
-        '<h1>¡Pedido confirmado!</h1>'+
-        '<p class="lead" style="margin-inline:auto">Gracias '+esc(d.name)+'. '+(emailed?('Te enviamos la confirmación a <b>'+esc(d.email)+'</b>.'):('Registramos tu pedido.'))+' Para completar la compra, coordiná la transferencia por WhatsApp.</p>'+
+        '<h1>¡Pedido recibido!</h1>'+
+        '<p class="lead" style="margin-inline:auto">Gracias '+esc(d.name)+'. Recibimos tu pedido y tu comprobante. '+(emailed?('Te enviamos la confirmación a <b>'+esc(d.email)+'</b>.'):('Te enviaremos la confirmación por email a <b>'+esc(d.email)+'</b>.'))+' Verificamos la transferencia y te avisamos.</p>'+
         '<div class="ck-confirm__box">'+
           '<div class="row"><span>Entrega</span><span>'+esc(d.delivLabel)+(d.deliv==="envio" && d.city?(" — "+esc(d.city)):"")+'</span></div>'+
-          '<div class="row"><span>Total a transferir</span><b>'+money(d.total)+'</b></div>'+
-          '<div class="row"><span>'+BANK.banco+'</span><span>'+BANK.cuenta+' · Alias '+BANK.alias+'</span></div>'+
+          '<div class="row"><span>Total</span><b>'+money(d.total)+'</b></div>'+
+          '<div class="row"><span>Estado</span><span class="status-pill status-pill--pending">Pendiente de verificación</span></div>'+
         '</div>'+
-        '<a class="btn btn--wa btn--lg" href="'+wa+'" target="_blank" rel="noopener">'+IC.wa+' Confirmar por WhatsApp</a>'+
-        '<a class="link-arrow" href="index.html" style="margin-top:1.4rem">Volver al inicio →</a>'+
+        '<a class="btn btn--lg" href="index.html" style="margin-top:1.4rem">Volver al inicio</a>'+
       '</div></div>';
     }
 

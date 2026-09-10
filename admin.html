@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de administración — Biofoods (demo)</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/img/logo-black.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,560;9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --forest:#1e3a2b;--forest-600:#2f5340;--pine:#14291b;--cream:#fbf7ee;--cream-2:#f4ecdd;
+  --sand:#e7dcc6;--sand-line:#ded2b9;--amber:#d99931;--amber-600:#bd8121;--terracotta:#bd6440;
+  --ink:#232619;--muted:#6d7263;--white:#fff;
+  --font-display:"Fraunces",Georgia,serif;--font-sans:"Manrope",system-ui,sans-serif;
+  --shadow-sm:0 1px 2px rgba(20,41,27,.06),0 2px 8px rgba(20,41,27,.05);
+  --shadow-md:0 6px 18px rgba(20,41,27,.09),0 2px 6px rgba(20,41,27,.05);
+  --shadow-lg:0 18px 44px rgba(20,41,27,.16);--ease:cubic-bezier(.22,.61,.36,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);color:var(--ink);background:var(--cream-2);font-size:15px;-webkit-font-smoothing:antialiased}
+button{cursor:pointer;font:inherit;border:none;background:none}
+img{max-width:100%;display:block}
+[hidden]{display:none!important}
+h1,h2,h3{font-family:var(--font-display);font-weight:560;color:var(--forest);line-height:1.1}
+
+/* ---- Demo banner ---- */
+.demo-tag{position:fixed;bottom:14px;right:14px;z-index:60;background:var(--amber);color:#3a2a08;font-weight:800;
+  font-size:.72rem;letter-spacing:.04em;padding:.4rem .8rem;border-radius:100px;box-shadow:var(--shadow-md)}
+
+/* ---- Login ---- */
+.login{min-height:100vh;display:grid;place-items:center;padding:1.5rem;
+  background:radial-gradient(900px 500px at 20% 10%,rgba(60,102,80,.14),transparent 60%),
+  radial-gradient(700px 500px at 100% 100%,rgba(217,153,49,.12),transparent 60%),var(--cream)}
+.login__card{width:min(400px,100%);background:var(--white);border:1px solid var(--sand);border-radius:24px;
+  padding:2.4rem 2rem;box-shadow:var(--shadow-lg);text-align:center}
+.login__card img{width:70px;height:70px;margin:0 auto 1rem}
+.login__card h1{font-size:1.5rem;margin-bottom:.2rem}
+.login__card p{color:var(--muted);font-size:.9rem;margin-bottom:1.6rem}
+.login__field{text-align:left;margin-bottom:1rem}
+.login__field label{display:block;font-weight:700;font-size:.82rem;margin-bottom:.4rem}
+.login__field input{width:100%;padding:.8rem 1rem;border:1.6px solid var(--sand-line);border-radius:12px;font-size:.95rem}
+.login__field input:focus{outline:none;border-color:var(--forest);box-shadow:0 0 0 4px rgba(30,58,43,.08)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;background:var(--forest);color:var(--cream);
+  font-weight:700;padding:.85em 1.5em;border-radius:100px;transition:transform .2s var(--ease),background .2s,box-shadow .2s;box-shadow:var(--shadow-sm)}
+.btn:hover{background:var(--forest-600);transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.btn--block{width:100%}
+.btn--amber{background:var(--amber);color:#3a2a08}.btn--amber:hover{background:var(--amber-600)}
+.btn--ghost{background:transparent;color:var(--forest);box-shadow:inset 0 0 0 1.5px var(--sand-line)}
+.btn--ghost:hover{background:var(--cream-2);box-shadow:inset 0 0 0 1.5px var(--forest)}
+.btn--sm{padding:.5em 1em;font-size:.85rem}
+.login__hint{margin-top:1rem;font-size:.78rem;color:var(--muted)}
+
+/* ---- App shell ---- */
+.app{display:grid;grid-template-columns:238px 1fr;min-height:100vh}
+.sidebar{background:var(--pine);color:#cbd6c6;padding:1.4rem 1rem;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.sidebar__brand{display:flex;align-items:center;gap:.6rem;padding:.2rem .4rem 1.4rem;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:1rem}
+.sidebar__brand img{width:40px;height:40px;filter:brightness(0) invert(1)}
+.sidebar__brand b{font-family:var(--font-display);color:var(--cream);font-size:1.1rem;line-height:1}
+.sidebar__brand span{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:#9db096}
+.nav-item{display:flex;align-items:center;gap:.7rem;padding:.7rem .8rem;border-radius:12px;color:#bdcab6;font-weight:600;font-size:.92rem;transition:background .2s,color .2s;width:100%;text-align:left}
+.nav-item svg{width:19px;height:19px;stroke-width:1.8}
+.nav-item:hover{background:rgba(255,255,255,.06);color:var(--cream)}
+.nav-item.active{background:var(--forest-600);color:var(--cream)}
+.sidebar__foot{margin-top:auto;padding-top:1rem;border-top:1px solid rgba(255,255,255,.1)}
+.sidebar__user{display:flex;align-items:center;gap:.6rem;font-size:.85rem;color:#cbd6c6;margin-bottom:.7rem}
+.sidebar__user .av{width:34px;height:34px;border-radius:50%;background:var(--amber);color:#3a2a08;display:grid;place-items:center;font-weight:800}
+
+.main{padding:1.6rem clamp(1rem,3vw,2rem);min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.6rem;flex-wrap:wrap}
+.topbar h1{font-size:1.7rem}
+.topbar .sub{color:var(--muted);font-size:.88rem;margin-top:.15rem}
+.menu-btn{display:none}
+
+/* ---- KPIs ---- */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.6rem}
+.kpi{background:var(--white);border:1px solid var(--sand);border-radius:18px;padding:1.1rem 1.2rem;box-shadow:var(--shadow-sm)}
+.kpi__label{font-size:.78rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:.5rem}
+.kpi__label .ic{width:30px;height:30px;border-radius:9px;background:var(--cream-2);display:grid;place-items:center;font-size:.95rem}
+.kpi__val{font-family:var(--font-display);font-size:1.75rem;color:var(--forest);margin-top:.5rem;line-height:1}
+.kpi__val small{font-size:.9rem;color:var(--muted);font-family:var(--font-sans);font-weight:600}
+.kpi--amber .kpi__val{color:var(--amber-600)}
+
+/* ---- Panel / table ---- */
+.panel{background:var(--white);border:1px solid var(--sand);border-radius:20px;box-shadow:var(--shadow-sm);overflow:hidden}
+.panel__head{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.1rem 1.2rem;border-bottom:1px solid var(--cream-2);flex-wrap:wrap}
+.panel__head h2{font-size:1.15rem}
+.filters{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+.search{position:relative}
+.search svg{position:absolute;left:.7rem;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--muted)}
+.search input{padding:.55rem .8rem .55rem 2.1rem;border:1.5px solid var(--sand-line);border-radius:100px;font-size:.88rem;width:210px}
+.search input:focus{outline:none;border-color:var(--forest)}
+.sel{padding:.55rem .8rem;border:1.5px solid var(--sand-line);border-radius:100px;font-size:.88rem;font-weight:600;background:var(--white);cursor:pointer}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:820px}
+th{text-align:left;font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:800;padding:.7rem 1rem;background:var(--cream);position:sticky;top:0}
+td{padding:.75rem 1rem;border-top:1px solid var(--cream-2);font-size:.88rem;vertical-align:middle}
+tbody tr{cursor:pointer;transition:background .15s}
+tbody tr:hover{background:#faf6ec}
+.o-id{font-weight:800;color:var(--forest)}
+.o-cli b{display:block;font-weight:700}
+.o-cli span{font-size:.78rem;color:var(--muted)}
+.o-total{font-family:var(--font-display);font-weight:600}
+.pill{display:inline-block;padding:.22rem .6rem;border-radius:100px;font-size:.74rem;font-weight:800;white-space:nowrap}
+.pill--pending{background:#fbeccb;color:#8a6516}
+.pill--paid{background:#d8ecdc;color:#1f6b3a}
+.pill--done{background:#dbe6f5;color:#2b4c7e}
+.pill--cancel{background:#f2dcd4;color:#9a4526}
+.src{display:inline-flex;align-items:center;gap:.35rem;font-weight:600;font-size:.82rem}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.empty{padding:3rem;text-align:center;color:var(--muted)}
+
+/* ---- Detail drawer ---- */
+.overlay{position:fixed;inset:0;background:rgba(20,41,27,.42);backdrop-filter:blur(2px);z-index:80;opacity:0;visibility:hidden;transition:.25s}
+.overlay.open{opacity:1;visibility:visible}
+.drawer{position:fixed;top:0;right:0;height:100vh;width:min(440px,100%);background:var(--cream);z-index:90;transform:translateX(100%);transition:transform .35s var(--ease);box-shadow:var(--shadow-lg);display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.drawer__head{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 1.3rem;border-bottom:1px solid var(--sand)}
+.drawer__head h3{font-size:1.35rem}
+.icon-btn{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:var(--forest);transition:background .2s}
+.icon-btn:hover{background:var(--cream-2)}
+.drawer__body{flex:1;overflow-y:auto;padding:1.3rem}
+.d-block{margin-bottom:1.3rem}
+.d-block h4{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.5rem;font-family:var(--font-sans);font-weight:800}
+.d-row{display:flex;justify-content:space-between;gap:1rem;padding:.3rem 0;font-size:.9rem}
+.d-row span:first-child{color:var(--muted)}
+.d-row b{font-weight:700}
+.d-item{display:flex;gap:.7rem;align-items:center;padding:.5rem 0;border-bottom:1px solid var(--cream-2)}
+.d-item img{width:44px;height:44px;border-radius:9px;object-fit:cover;background:var(--cream-2)}
+.d-item .n{flex:1;font-size:.86rem}.d-item .n span{color:var(--muted);font-size:.78rem}
+.proof{display:flex;align-items:center;gap:.7rem;background:var(--white);border:1px dashed var(--sand-line);border-radius:12px;padding:.8rem}
+.proof .thumb{width:46px;height:46px;border-radius:8px;background:var(--cream-2);display:grid;place-items:center;font-size:1.3rem}
+.proof b{display:block;font-size:.85rem}.proof span{font-size:.76rem;color:var(--muted)}
+.drawer__foot{padding:1.1rem 1.3rem;border-top:1px solid var(--sand);background:var(--cream-2);display:flex;gap:.6rem;flex-wrap:wrap}
+
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:fixed;left:0;top:0;z-index:100;transform:translateX(-100%);transition:transform .3s var(--ease);width:240px}
+  .sidebar.open{transform:none}
+  .menu-btn{display:grid}
+  .kpis{grid-template-columns:1fr 1fr}
+}
+@media (max-width:520px){.kpis{grid-template-columns:1fr 1fr;gap:.7rem}.search input{width:150px}}
+</style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div class="login" id="loginView">
+  <div class="login__card">
+    <img src="assets/img/logo-black.png" alt="Biofoods">
+    <h1>Panel de administración</h1>
+    <p>Acceso exclusivo del negocio</p>
+    <form id="loginForm">
+      <div class="login__field"><label>Usuario</label><input type="text" value="biofoods" autocomplete="username"></div>
+      <div class="login__field"><label>Contraseña</label><input type="password" value="demo1234" autocomplete="current-password"></div>
+      <button class="btn btn--block" type="submit">Ingresar</button>
+    </form>
+    <p class="login__hint">🔒 Demostración — en producción el acceso es con usuario y contraseña reales sobre el hosting.</p>
+  </div>
+</div>
+
+<!-- ===== APP ===== -->
+<div class="app" id="appView" hidden>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar__brand">
+      <img src="assets/img/logo-black.png" alt="">
+      <div><b>Biofoods</b><br><span>Admin</span></div>
+    </div>
+    <nav>
+      <button class="nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Pedidos</button>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7 12 3 4 7l8 4 8-4z"/><path d="M4 7v10l8 4 8-4V7"/><path d="m12 11v10"/></svg> Productos</button>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="12" y="6" width="3" height="12"/><rect x="17" y="13" width="3" height="5"/></svg> Reportes</button>
+      <button class="nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Ajustes</button>
+    </nav>
+    <div class="sidebar__foot">
+      <div class="sidebar__user"><span class="av">B</span><div><b style="color:var(--cream)">Biofoods</b><br><span style="color:#9db096">Administrador</span></div></div>
+      <button class="nav-item" id="logoutBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></svg> Cerrar sesión</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:.8rem">
+        <button class="icon-btn menu-btn" id="menuBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <div><h1>Pedidos</h1><div class="sub" id="topSub"></div></div>
+      </div>
+      <button class="btn btn--ghost btn--sm" id="exportBtn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-right:.3rem"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Exportar Excel</button>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="panel">
+      <div class="panel__head">
+        <h2>Todos los pedidos</h2>
+        <div class="filters">
+          <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="q" type="search" placeholder="Buscar cliente o N°…"></div>
+          <select class="sel" id="fStatus"><option value="">Todos los estados</option><option value="pending">Pendiente</option><option value="paid">Pagado</option><option value="done">Entregado</option><option value="cancel">Cancelado</option></select>
+          <select class="sel" id="fSource"><option value="">Todos los orígenes</option><option>Instagram</option><option>Facebook</option><option>Directo</option><option>Google</option></select>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>N°</th><th>Fecha</th><th>Cliente</th><th>Total</th><th>Entrega</th><th>Pago</th><th>Origen</th><th>Estado</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="empty" id="empty" hidden>No hay pedidos con esos filtros.</div>
+    </div>
+  </main>
+</div>
+
+<!-- Detail drawer -->
+<div class="overlay" id="ov"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer__head"><h3 id="dTitle">Pedido</h3><button class="icon-btn" id="dClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+  <div class="drawer__body" id="dBody"></div>
+  <div class="drawer__foot" id="dFoot"></div>
+</aside>
+
+<div class="demo-tag">DEMO · Panel de muestra</div>
+
+<script>
+// ---------- sample data ----------
+const money = n => "Gs. " + Number(n).toLocaleString("de-DE");
+const IMG = "assets/img/";
+const SRC = { Instagram:"#c13584", Facebook:"#1877f2", Directo:"#6d7263", Google:"#ea4335" };
+let ORDERS = [
+ {id:"0148",date:"10/09 14:23",name:"María López",email:"maria.lopez@gmail.com",phone:"0981 234 567",items:[["Mix Keto","500 Gr.",1,65000,"mix-keto"],["Castañas de Caju","250 Gr.",1,45000,"castanas-de-caju"]],ship:25000,city:"Luque",deliv:"Envío",pay:"Transferencia",src:"Instagram",status:"pending",proof:"comprobante-0148.jpg"},
+ {id:"0147",date:"10/09 12:05",name:"Juan Giménez",email:"juangimenez@hotmail.com",phone:"0972 887 145",items:[["Almendras","1 KG.",1,110000,"almendras-naturales"]],ship:20000,city:"Asunción",deliv:"Envío",pay:"Tarjeta",src:"Facebook",status:"paid"},
+ {id:"0146",date:"10/09 10:41",name:"Sofía Benítez",email:"sofiab@gmail.com",phone:"0983 551 020",items:[["Combo chocolovers","",1,189000,"combo-chocolates"]],ship:0,city:"",deliv:"Retiro",pay:"Transferencia",src:"Instagram",status:"paid",proof:"comprobante-0146.pdf"},
+ {id:"0145",date:"09/09 19:12",name:"Diego Rojas",email:"diego.rojas@gmail.com",phone:"0961 402 338",items:[["Spirulina 100% Puro","250 Gr.",1,70000,"spirulina-100-puro"],["Maca Peruana","250 Gr.",1,45000,"maca-peruana"]],ship:30000,city:"San Lorenzo",deliv:"Envío",pay:"Tarjeta",src:"Google",status:"done"},
+ {id:"0144",date:"09/09 16:50",name:"Carla Duarte",email:"carla.d@gmail.com",phone:"0985 771 664",items:[["Dátiles con Carozo","500 Gr.",2,55000,"datiles-con-carozo"]],ship:25000,city:"Fernando de la Mora",deliv:"Envío",pay:"Transferencia",src:"Directo",status:"pending",proof:"comprobante-0144.jpg"},
+ {id:"0143",date:"09/09 13:22",name:"Andrés Villalba",email:"avillalba@gmail.com",phone:"0971 209 553",items:[["Harina de Almendras sin Piel","1 Kg.",1,120000,"harina-de-almendras-sin-piel"]],ship:0,city:"",deliv:"Retiro",pay:"Tarjeta",src:"Instagram",status:"paid"},
+ {id:"0142",date:"08/09 20:03",name:"Lucía Franco",email:"lu.franco@gmail.com",phone:"0982 118 907",items:[["Mix Antioxidante","500 Gr.",1,55000,"mix-antioxidante"],["Arándanos Rojos","250 Gr.",1,30000,"arandanos-rojos"],["Chips de Banana","250 Gr.",1,30000,"chips-de-banana"]],ship:35000,city:"Mariano R. Alonso",deliv:"Envío",pay:"Transferencia",src:"Facebook",status:"done",proof:"comprobante-0142.jpg"},
+ {id:"0141",date:"08/09 15:44",name:"Pedro Martínez",email:"pedrom@gmail.com",phone:"0991 553 210",items:[["Castañas De Para","500 Gr.",1,100000,"castanas-de-para"]],ship:20000,city:"Asunción",deliv:"Envío",pay:"Tarjeta",src:"Directo",status:"paid"},
+ {id:"0140",date:"08/09 11:10",name:"Gabriela Ruiz",email:"gaby.ruiz@gmail.com",phone:"0984 662 471",items:[["Colágeno Hidrolizado","250 Gr.",1,70000,"colageno-hidrolizado"]],ship:0,city:"",deliv:"Retiro",pay:"Transferencia",src:"Instagram",status:"pending",proof:"comprobante-0140.jpg"},
+ {id:"0139",date:"07/09 18:30",name:"Marcos Aquino",email:"marcos.aquino@gmail.com",phone:"0976 330 118",items:[["Combo frutos secos","",1,175000,"combo-frutos-secos"]],ship:30000,city:"Interior (Transportadora)",deliv:"Envío",pay:"Tarjeta",src:"Instagram",status:"done"},
+ {id:"0138",date:"07/09 14:02",name:"Valeria Cáceres",email:"vale.caceres@gmail.com",phone:"0983 901 745",items:[["Nuez Mariposa","500 Gr.",1,60000,"nuez-mariposa"],["Almendras bañadas en chocolate sin azúcar","250 Gr.",1,70000,"almendras-banadas-en-chocolate-sin-azucar"]],ship:25000,city:"Lambaré",deliv:"Envío",pay:"Transferencia",src:"Facebook",status:"paid",proof:"comprobante-0138.pdf"},
+ {id:"0137",date:"06/09 21:15",name:"Ramón Ortiz",email:"ramon.ortiz@gmail.com",phone:"0961 774 289",items:[["Pistachos con cáscara y sal","500 Gr.",1,115000,"pistachos"]],ship:20000,city:"Asunción",deliv:"Envío",pay:"Tarjeta",src:"Google",status:"cancel"},
+];
+const catImg = h => IMG + (h||"logo-black") + ".jpg";
+
+// ---------- login ----------
+const $ = s => document.querySelector(s);
+$("#loginForm").addEventListener("submit", e=>{ e.preventDefault(); $("#loginView").hidden=true; $("#appView").hidden=false; render(); });
+$("#logoutBtn").addEventListener("click", ()=>{ $("#appView").hidden=true; $("#loginView").hidden=false; });
+$("#menuBtn").addEventListener("click", ()=> $("#sidebar").classList.toggle("open"));
+$("#exportBtn").addEventListener("click", ()=> alert("Demo: en producción exporta la lista filtrada a un archivo Excel/CSV."));
+
+// ---------- KPIs ----------
+function renderKPIs(){
+  const paid = ORDERS.filter(o=>o.status==="paid"||o.status==="done");
+  const rev = paid.reduce((s,o)=>s+total(o),0);
+  const pend = ORDERS.filter(o=>o.status==="pending").length;
+  const bySrc = {}; ORDERS.forEach(o=>bySrc[o.src]=(bySrc[o.src]||0)+1);
+  const topSrc = Object.entries(bySrc).sort((a,b)=>b[1]-a[1])[0];
+  const kpis=[
+    {label:"Ventas (semana)",ic:"💰",val:money(rev),cls:""},
+    {label:"Pedidos",ic:"📦",val:ORDERS.length+" <small>total</small>",cls:""},
+    {label:"Pendientes",ic:"⏳",val:pend+" <small>por verificar</small>",cls:"kpi--amber"},
+    {label:"Top origen",ic:"📣",val:topSrc[0]+" <small>"+topSrc[1]+" ventas</small>",cls:""},
+  ];
+  $("#kpis").innerHTML = kpis.map(k=>`<div class="kpi ${k.cls}"><div class="kpi__label"><span class="ic">${k.ic}</span>${k.label}</div><div class="kpi__val">${k.val}</div></div>`).join("");
+  $("#topSub").textContent = "Semana del 6 al 10 de septiembre · "+ORDERS.length+" pedidos";
+}
+const total = o => o.items.reduce((s,it)=>s+it[2]*it[3],0) + (o.ship||0);
+const PILL = {pending:["pill--pending","Pendiente"],paid:["pill--paid","Pagado"],done:["pill--done","Entregado"],cancel:["pill--cancel","Cancelado"]};
+
+// ---------- table ----------
+function render(){
+  renderKPIs();
+  const q=$("#q").value.trim().toLowerCase(), fs=$("#fStatus").value, fo=$("#fSource").value;
+  const list = ORDERS.filter(o=>{
+    if(fs && o.status!==fs) return false;
+    if(fo && o.src!==fo) return false;
+    if(q && !(o.name.toLowerCase().includes(q)||o.id.includes(q))) return false;
+    return true;
+  });
+  $("#empty").hidden = list.length>0;
+  $("#rows").innerHTML = list.map(o=>{
+    const p=PILL[o.status];
+    return `<tr data-id="${o.id}">
+      <td class="o-id">#${o.id}</td>
+      <td>${o.date}</td>
+      <td class="o-cli"><b>${o.name}</b><span>${o.email}</span></td>
+      <td class="o-total">${money(total(o))}</td>
+      <td>${o.deliv}${o.city?" · "+o.city:""}</td>
+      <td>${o.pay}</td>
+      <td><span class="src"><span class="dot" style="background:${SRC[o.src]}"></span>${o.src}</span></td>
+      <td><span class="pill ${p[0]}">${p[1]}</span></td>
+    </tr>`;
+  }).join("");
+  document.querySelectorAll("#rows tr").forEach(tr=>tr.addEventListener("click",()=>openOrder(tr.dataset.id)));
+}
+["#q","#fStatus","#fSource"].forEach(s=>$(s).addEventListener("input",render));
+
+// ---------- detail ----------
+function openOrder(id){
+  const o=ORDERS.find(x=>x.id===id); if(!o) return;
+  $("#dTitle").textContent="Pedido #"+o.id;
+  const p=PILL[o.status];
+  $("#dBody").innerHTML=`
+    <div class="d-block"><h4>Estado</h4><span class="pill ${p[0]}">${p[1]}</span> <span style="color:var(--muted);font-size:.82rem">· ${o.date}</span></div>
+    <div class="d-block"><h4>Cliente</h4>
+      <div class="d-row"><span>Nombre</span><b>${o.name}</b></div>
+      <div class="d-row"><span>Email</span><b>${o.email}</b></div>
+      <div class="d-row"><span>Teléfono</span><b>${o.phone}</b></div>
+      <div class="d-row"><span>Origen</span><b>${o.src}</b></div>
+    </div>
+    <div class="d-block"><h4>Entrega</h4>
+      <div class="d-row"><span>Método</span><b>${o.deliv}${o.city?" — "+o.city:""}</b></div>
+      <div class="d-row"><span>Costo de envío</span><b>${o.ship?money(o.ship):"Gratis"}</b></div>
+    </div>
+    <div class="d-block"><h4>Productos</h4>
+      ${o.items.map(it=>`<div class="d-item"><img src="${catImg(it[4])}" alt=""><div class="n">${it[0]} <span>${it[1]?it[1]+" · ":""}x${it[2]}</span></div><b>${money(it[2]*it[3])}</b></div>`).join("")}
+      <div class="d-row" style="margin-top:.6rem"><span>Total</span><b style="font-family:var(--font-display);font-size:1.15rem;color:var(--forest)">${money(total(o))}</b></div>
+    </div>
+    ${o.pay==="Transferencia"?`<div class="d-block"><h4>Pago — Transferencia</h4><div class="proof"><span class="thumb">${o.proof&&o.proof.endsWith(".pdf")?"📄":"🖼️"}</span><div style="flex:1"><b>${o.proof||"—"}</b><span>Comprobante adjunto</span></div><button class="btn btn--ghost btn--sm" onclick="alert('Demo: descarga el comprobante adjunto.')">Ver</button></div></div>`:`<div class="d-block"><h4>Pago — Tarjeta (Bancard)</h4><div class="d-row"><span>Estado</span><b style="color:#1f6b3a">Aprobado automáticamente</b></div></div>`}
+  `;
+  const foot=[];
+  if(o.status==="pending") foot.push(`<button class="btn btn--amber" onclick="setStatus('${o.id}','paid')">✓ Marcar pagado</button>`);
+  if(o.status==="paid") foot.push(`<button class="btn" onclick="setStatus('${o.id}','done')">Marcar entregado</button>`);
+  foot.push(`<button class="btn btn--ghost" onclick="closeDrawer()">Cerrar</button>`);
+  $("#dFoot").innerHTML=foot.join("");
+  $("#ov").classList.add("open"); $("#drawer").classList.add("open");
+}
+function closeDrawer(){ $("#ov").classList.remove("open"); $("#drawer").classList.remove("open"); }
+function setStatus(id,st){ const o=ORDERS.find(x=>x.id===id); if(o){o.status=st;} render(); openOrder(id); }
+window.setStatus=setStatus; window.closeDrawer=closeDrawer;
+$("#dClose").addEventListener("click",closeDrawer); $("#ov").addEventListener("click",closeDrawer);
+</script>
+</body>
+</html>
