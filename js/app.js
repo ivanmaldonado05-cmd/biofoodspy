@@ -467,11 +467,30 @@
 
       var btn=$("#placeOrder"); btn.disabled=true; btn.textContent="Procesando…";
 
+      function trackPurchase(){ try{ if(window.gtag) gtag('event','purchase',{value:d.total,currency:'PYG'}); if(window.fbq) fbq('track','Purchase',{value:d.total,currency:'PYG'}); }catch(e){} }
       function finish(emailed){
+        trackPurchase();
         clearCart();
         root.innerHTML = confirmationHTML(d, emailed);
         window.scrollTo(0,0);
         initReveal();
+      }
+
+      // ---- Producción (Hostinger): envía pedido + comprobante al backend PHP ----
+      if(window.BIOFOODS_API){
+        var fd=new FormData();
+        fd.append("name",name); fd.append("email",email); fd.append("phone",phone);
+        fd.append("deliv",state.deliv); fd.append("city",state.city||""); fd.append("address",addr);
+        if(orderLoc){ fd.append("lat",orderLoc.lat); fd.append("lng",orderLoc.lng); }
+        fd.append("note",note); fd.append("source",getSource()); fd.append("payment","transferencia");
+        fd.append("subtotal",sub); fd.append("shipping",shipping); fd.append("total",d.total);
+        fd.append("items", JSON.stringify(cart.map(function(i){var p=byHandle(i.handle)||{};return {title:p.title||i.handle,size:i.size,qty:i.qty,price:i.price};})));
+        if(proof) fd.append("proof", proof);
+        fetch(String(window.BIOFOODS_API).replace(/\/$/,"")+"/save_order.php",{method:"POST",body:fd})
+          .then(function(r){return r.json();})
+          .then(function(res){ if(res&&res.ok){ finish(!!res.emailed); } else { throw new Error((res&&res.error)||"error"); } })
+          .catch(function(){ btn.disabled=false; btn.textContent="Confirmar pedido"; m.textContent="No se pudo enviar el pedido. Probá de nuevo."; m.classList.add("err"); });
+        return;
       }
 
       if(emailjsReady()){
@@ -757,8 +776,27 @@
     initReveal();
   }
 
+  /* ================= TRAFFIC SOURCE (first-touch) ================= */
+  function captureSource(){
+    try{
+      if(localStorage.getItem("biofoods_src")) return; // primera visita manda
+      var u=(new URLSearchParams(location.search).get("utm_source")||"").toLowerCase();
+      var map={instagram:"Instagram",ig:"Instagram",facebook:"Facebook",fb:"Facebook",google:"Google"};
+      var src;
+      if(u){ src=map[u]||(u.charAt(0).toUpperCase()+u.slice(1)); }
+      else { var ref=document.referrer||"";
+        if(/instagram/.test(ref)) src="Instagram";
+        else if(/facebook|fb\./.test(ref)) src="Facebook";
+        else if(/google/.test(ref)) src="Google";
+        else if(!ref) src="Directo"; else src="Referido"; }
+      localStorage.setItem("biofoods_src", src);
+    }catch(e){}
+  }
+  function getSource(){ try{ return localStorage.getItem("biofoods_src")||"Directo"; }catch(e){ return "Directo"; } }
+
   /* ================= INIT ================= */
   function init(){
+    captureSource();
     buildHeader(); buildFooter(); buildDrawer(); buildFloat();
     syncCart();
     var page = document.body.getAttribute("data-page");

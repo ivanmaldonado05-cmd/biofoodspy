@@ -4,3 +4,9 @@ data/shopify-products.json
 .DS_Store
 Thumbs.db
 node_modules/
+
+# production secrets & uploads (Hostinger) — nunca versionar
+server/config.php
+server/uploads/*
+!server/uploads/.htaccess
+server/lib/PHPMailer/

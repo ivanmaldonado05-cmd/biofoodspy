@@ -1,0 +1,3 @@
+# Comprobantes privados — sin acceso directo por la web.
+# Se descargan solo desde el panel de administración (con sesión).
+Require all denied
