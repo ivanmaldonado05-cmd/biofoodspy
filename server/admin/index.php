@@ -151,7 +151,7 @@ tr:hover td{background:#faf6ec}a.row{color:inherit;text-decoration:none}
   <div class="detail">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem">
       <h2 style="margin:0;color:var(--forest)">Pedido <?=order_code($detail['id'])?> <?=pill($detail['status'],$P)?></h2>
-      <a class="btn ghost" href="index.php">← Volver</a>
+      <div style="display:flex;gap:.5rem"><button class="btn" id="pdfBtn">📄 Descargar PDF</button><a class="btn ghost" href="index.php">← Volver</a></div>
     </div>
     <div class="r"><span>Fecha</span><b><?=e($detail['created_at'])?></b></div>
     <div class="r"><span>Cliente</span><b><?=e($detail['name'])?> · <?=e($detail['email'])?> · <?=e($detail['phone'])?></b></div>
@@ -170,6 +170,55 @@ tr:hover td{background:#faf6ec}a.row{color:inherit;text-decoration:none}
       <?php endif; endforeach;?>
     </div>
   </div>
+  <?php
+    $pdfData = [
+      'code'=>order_code($detail['id']), 'date'=>$detail['created_at'],
+      'status'=>($PILL[$detail['status']][2] ?? $detail['status']),
+      'name'=>$detail['name'], 'email'=>$detail['email'], 'phone'=>$detail['phone'], 'source'=>$detail['source'],
+      'delivery'=>($detail['delivery']==='retiro'?'Retiro en local':('Envío'.($detail['city']?' — '.$detail['city']:''))),
+      'address'=>$detail['address'], 'loc'=>($detail['location_lat']?($detail['location_lat'].','.$detail['location_lng']):''),
+      'payment'=>($detail['payment']==='tarjeta'?'Tarjeta (Bancard)':'Transferencia'),
+      'items'=>array_map(function($it){return ['q'=>(int)$it['qty'],'t'=>$it['title'],'s'=>$it['size']??'','line'=>((int)$it['price']*(int)$it['qty'])];}, $items),
+      'shipping'=>(int)$detail['shipping'], 'total'=>(int)$detail['total'],
+    ];
+  ?>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+  (function(){
+    var O = <?= json_encode($pdfData, JSON_UNESCAPED_UNICODE) ?>;
+    function fmt(n){ return 'Gs. ' + Number(n).toLocaleString('de-DE'); }
+    var btn = document.getElementById('pdfBtn'); if(!btn) return;
+    btn.addEventListener('click', function(){
+      var J = window.jspdf && window.jspdf.jsPDF; if(!J){ alert('No se pudo cargar el generador de PDF.'); return; }
+      var doc = new J({unit:'pt', format:'a4'});
+      var W = doc.internal.pageSize.getWidth(), L = 48, y = 54;
+      doc.setFont('helvetica','bold'); doc.setTextColor(30,58,43); doc.setFontSize(20); doc.text('Biofoods Paraguay', L, y);
+      doc.setFontSize(13); doc.setTextColor(120,120,120); doc.text('Pedido ' + O.code, L, y+20);
+      doc.setDrawColor(222,210,185); doc.line(L, y+32, W-L, y+32); y += 58;
+      function row(label,val){ doc.setFont('helvetica','bold'); doc.setTextColor(90,90,90); doc.setFontSize(10); doc.text(label, L, y);
+        doc.setFont('helvetica','normal'); doc.setTextColor(35,38,25); doc.setFontSize(11);
+        var lines = doc.splitTextToSize(String(val||'-'), W-L-160); doc.text(lines, L+120, y); y += Math.max(16, lines.length*14); }
+      row('Fecha', O.date); row('Estado', O.status); row('Cliente', O.name); row('Email', O.email);
+      row('Teléfono', O.phone); row('Origen', O.source); row('Entrega', O.delivery);
+      if(O.address) row('Dirección', O.address); if(O.loc) row('Ubicación', 'https://maps.google.com/?q='+O.loc);
+      row('Pago', O.payment); y += 8;
+      doc.setFont('helvetica','bold'); doc.setTextColor(30,58,43); doc.setFontSize(12); doc.text('Productos', L, y); y += 8;
+      doc.setDrawColor(222,210,185); doc.line(L, y, W-L, y); y += 16; doc.setFontSize(11);
+      O.items.forEach(function(it){ doc.setFont('helvetica','normal'); doc.setTextColor(35,38,25);
+        var name = it.q + '×  ' + it.t + (it.s?('  ('+it.s+')'):'');
+        var lines = doc.splitTextToSize(name, W-L-130); doc.text(lines, L, y);
+        doc.text(fmt(it.line), W-L, y, {align:'right'}); y += Math.max(16, lines.length*14); });
+      doc.setDrawColor(230,225,210); doc.line(L, y, W-L, y); y += 16;
+      doc.setFont('helvetica','normal'); doc.setTextColor(90,90,90); doc.text('Envío', L, y);
+      doc.text(O.shipping?fmt(O.shipping):'Gratis', W-L, y, {align:'right'}); y += 18;
+      doc.setFont('helvetica','bold'); doc.setTextColor(30,58,43); doc.setFontSize(13); doc.text('Total', L, y);
+      doc.text(fmt(O.total), W-L, y, {align:'right'}); y += 30;
+      doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(140,140,140);
+      doc.text('Biofoods Paraguay · biofoodspy.com', L, y);
+      doc.save('pedido_' + O.code.replace('#','') + '.pdf');
+    });
+  })();
+  </script>
   <?php endif; ?>
 
   <div class="panel">
