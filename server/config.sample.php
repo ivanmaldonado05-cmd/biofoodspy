@@ -33,9 +33,11 @@ return [
   ],
 
   // ---------- Panel de administración ----------
-  // Generá el hash con:  php -r "echo password_hash('TU_CLAVE', PASSWORD_DEFAULT);"
   'admin_user' => 'biofoods',
-  'admin_pass_hash' => 'REEMPLAZAR_hash_generado',
+  'admin_pass' => 'CAMBIAR_clave_admin',   // clave directa (simple)
+  // Alternativa más segura (opcional): dejar 'admin_pass' vacío y usar un hash:
+  //   php -r "echo password_hash('TU_CLAVE', PASSWORD_DEFAULT);"
+  'admin_pass_hash' => '',
 
   // ---------- Bancard vPOS ----------
   'bancard' => [

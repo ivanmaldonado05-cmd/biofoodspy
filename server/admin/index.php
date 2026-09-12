@@ -11,7 +11,10 @@ if (isset($_GET['logout'])) { session_destroy(); header('Location: index.php'); 
 
 if (!empty($_POST['login'])) {
   $u = $_POST['user'] ?? ''; $p = $_POST['pass'] ?? '';
-  if ($u === $c['admin_user'] && password_verify($p, $c['admin_pass_hash'])) {
+  $passOk = false;
+  if (!empty($c['admin_pass_hash'])) $passOk = password_verify($p, $c['admin_pass_hash']);
+  elseif (!empty($c['admin_pass'])) $passOk = hash_equals((string)$c['admin_pass'], (string)$p);
+  if ($u === $c['admin_user'] && $passOk) {
     $_SESSION['bf_admin'] = true; header('Location: index.php'); exit;
   } else { $loginErr = 'Usuario o contraseña incorrectos.'; }
 }
@@ -49,6 +52,14 @@ if (!empty($_GET['proof'])) {
 }
 
 $pdo = db();
+
+/* ---------- ping (auto-actualización) ---------- */
+if (isset($_GET['ping'])) {
+  $m = (int)$pdo->query("SELECT COALESCE(MAX(id),0) FROM orders")->fetchColumn();
+  $p = (int)$pdo->query("SELECT COUNT(*) FROM orders WHERE status='pending'")->fetchColumn();
+  header('Content-Type: application/json'); echo json_encode(['max'=>$m,'pending'=>$p]); exit;
+}
+$curMax = (int)$pdo->query("SELECT COALESCE(MAX(id),0) FROM orders")->fetchColumn();
 
 /* ---------- cambio de estado ---------- */
 if (!empty($_POST['action']) && $_POST['action'] === 'status') {
@@ -188,4 +199,23 @@ tr:hover td{background:#faf6ec}a.row{color:inherit;text-decoration:none}
       </tbody>
     </table>
   </div>
-</div></body></html>
+</div>
+<div id="newBanner" style="display:none;position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#1e3a2b;color:#fbf7ee;padding:.7rem 1.2rem;border-radius:100px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.25);cursor:pointer;z-index:200">🔔 <span id="newCount">1</span> pedido(s) nuevo(s) — actualizar</div>
+<script>
+(function(){
+  var CUR = <?=$curMax?>;
+  var onDetail = <?= $detail ? 'true':'false' ?>;
+  var banner = document.getElementById('newBanner');
+  banner.addEventListener('click', function(){ location.href = 'index.php'; });
+  function busy(){ var a=document.activeElement; return a && (a.tagName==='INPUT'||a.tagName==='SELECT'||a.tagName==='TEXTAREA'); }
+  setInterval(function(){
+    fetch('?ping=1',{cache:'no-store'}).then(function(r){return r.json();}).then(function(d){
+      if(d && d.max > CUR){
+        if(!onDetail && !busy()){ location.reload(); }
+        else { document.getElementById('newCount').textContent = (d.max - CUR); banner.style.display='block'; }
+      }
+    }).catch(function(){});
+  }, 12000);
+})();
+</script>
+</body></html>
