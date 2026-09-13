@@ -6,6 +6,12 @@ require_once __DIR__ . '/../lib/helpers.php';
 require_once __DIR__ . '/../lib/mailer.php';
 require_once __DIR__ . '/../db.php';
 
+/* Protección: el cron (CLI) siempre corre; por navegador solo con ?key=... */
+$CRON_KEY = 'bf-report-2026';
+if (php_sapi_name() !== 'cli') {
+  if (($_GET['key'] ?? '') !== $CRON_KEY) { http_response_code(403); exit('No autorizado'); }
+}
+
 $pdo = db();
 
 $tot = $pdo->query("SELECT COUNT(*) n,
