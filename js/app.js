@@ -5,6 +5,16 @@
 (function () {
   "use strict";
 
+  /* ---------- Backend auto-detect (demo vs producción) ----------
+     - GitHub Pages / localhost / file:// => demo (sin backend, confirmación en pantalla)
+     - cualquier hosting real (Hostinger) => usa /server (PHP + base de datos)
+     Se puede forzar definiendo window.BIOFOODS_API antes de este script. */
+  if (typeof window.BIOFOODS_API === "undefined") {
+    var _h = location.hostname;
+    var _demo = /\.github\.io$/.test(_h) || _h === "localhost" || _h === "127.0.0.1" || location.protocol === "file:";
+    window.BIOFOODS_API = _demo ? "" : "/server";
+  }
+
   /* ---------- Config ---------- */
   var WA_NUMBER = "595986924545";
   var EMAIL = "info@biofoodspy.com";
