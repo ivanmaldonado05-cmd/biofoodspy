@@ -71,11 +71,15 @@ if (!empty($_POST['action']) && $_POST['action'] === 'status') {
 
 /* ---------- filtros ---------- */
 $q = trim($_GET['q'] ?? ''); $fs = $_GET['status'] ?? ''; $fo = $_GET['source'] ?? '';
+$fd = trim($_GET['desde'] ?? ''); $fh = trim($_GET['hasta'] ?? '');
 $where = []; $args = [];
 if ($fs !== '') { $where[] = 'status = ?'; $args[] = $fs; }
 if ($fo !== '') { $where[] = 'source = ?'; $args[] = $fo; }
 if ($q !== '')  { $where[] = '(name LIKE ? OR email LIKE ? OR id = ?)'; $args[] = "%$q%"; $args[] = "%$q%"; $args[] = (int)ltrim($q,'#'); }
+if (preg_match('/^\d{4}-\d{2}-\d{2}$/',$fd)) { $where[]='created_at >= ?'; $args[]=$fd.' 00:00:00'; }
+if (preg_match('/^\d{4}-\d{2}-\d{2}$/',$fh)) { $where[]='created_at <= ?'; $args[]=$fh.' 23:59:59'; }
 $wsql = $where ? ('WHERE ' . implode(' AND ', $where)) : '';
+$qs = http_build_query(array_filter(['q'=>$q,'status'=>$fs,'source'=>$fo,'desde'=>$fd,'hasta'=>$fh]));
 
 /* ---------- exportar CSV ---------- */
 if (($_GET['export'] ?? '') === 'csv') {
@@ -95,9 +99,10 @@ if (($_GET['export'] ?? '') === 'csv') {
 /* ---------- KPIs ---------- */
 $kpi = $pdo->query("SELECT
   COALESCE(SUM(CASE WHEN status IN ('paid','done') THEN total END),0) AS revenue,
-  COUNT(*) AS total_orders,
   SUM(CASE WHEN status='pending' THEN 1 ELSE 0 END) AS pending
   FROM orders WHERE created_at >= (NOW() - INTERVAL 7 DAY)")->fetch();
+$kpiMonth = (int)$pdo->query("SELECT COALESCE(SUM(CASE WHEN status IN ('paid','done') THEN total END),0)
+  FROM orders WHERE created_at >= (NOW() - INTERVAL 30 DAY)")->fetchColumn();
 $topSrc = $pdo->query("SELECT source, COUNT(*) n FROM orders WHERE created_at >= (NOW() - INTERVAL 7 DAY) GROUP BY source ORDER BY n DESC LIMIT 1")->fetch();
 
 /* ---------- detalle ---------- */
@@ -106,8 +111,12 @@ if (!empty($_GET['id'])) {
   $d = $pdo->prepare("SELECT * FROM orders WHERE id=?"); $d->execute([(int)$_GET['id']]); $detail = $d->fetch();
 }
 
-/* ---------- lista ---------- */
-$list = $pdo->prepare("SELECT * FROM orders $wsql ORDER BY id DESC LIMIT 300"); $list->execute($args);
+/* ---------- lista + paginación ---------- */
+$per = 50; $page = max(1,(int)($_GET['pg'] ?? 1));
+$cnt = $pdo->prepare("SELECT COUNT(*) FROM orders $wsql"); $cnt->execute($args); $totalRows=(int)$cnt->fetchColumn();
+$pages = max(1, (int)ceil($totalRows/$per)); if($page>$pages) $page=$pages;
+$off = ($page-1)*$per;
+$list = $pdo->prepare("SELECT * FROM orders $wsql ORDER BY id DESC LIMIT $per OFFSET $off"); $list->execute($args);
 $orders = $list->fetchAll();
 
 $PILL = ['pending'=>['#fbeccb','#8a6516','Pendiente'],'paid'=>['#d8ecdc','#1f6b3a','Pagado'],'done'=>['#dbe6f5','#2b4c7e','Entregado'],'cancel'=>['#f2dcd4','#9a4526','Cancelado']];
@@ -142,7 +151,7 @@ tr:hover td{background:#faf6ec}a.row{color:inherit;text-decoration:none}
 
   <div class="kpis">
     <div class="kpi"><small>Ventas (semana)</small><b><?=money($kpi['revenue'])?></b></div>
-    <div class="kpi"><small>Pedidos (semana)</small><b><?=(int)$kpi['total_orders']?></b></div>
+    <div class="kpi"><small>Ventas (mes)</small><b><?=money($kpiMonth)?></b></div>
     <div class="kpi"><small>Pendientes</small><b style="color:var(--amber)"><?=(int)$kpi['pending']?></b></div>
     <div class="kpi"><small>Top origen</small><b><?=e($topSrc['source'] ?? '—')?></b></div>
   </div>
@@ -182,16 +191,19 @@ tr:hover td{background:#faf6ec}a.row{color:inherit;text-decoration:none}
       'shipping'=>(int)$detail['shipping'], 'total'=>(int)$detail['total'],
     ];
   ?>
+  <?php $logoB64 = @base64_encode((string)@file_get_contents(__DIR__.'/../../assets/img/logo-black.png')); ?>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
   (function(){
     var O = <?= json_encode($pdfData, JSON_UNESCAPED_UNICODE) ?>;
+    var LOGO = <?= $logoB64 ? ("'data:image/png;base64,".$logoB64."'") : "null" ?>;
     function fmt(n){ return 'Gs. ' + Number(n).toLocaleString('de-DE'); }
     var btn = document.getElementById('pdfBtn'); if(!btn) return;
     btn.addEventListener('click', function(){
       var J = window.jspdf && window.jspdf.jsPDF; if(!J){ alert('No se pudo cargar el generador de PDF.'); return; }
       var doc = new J({unit:'pt', format:'a4'});
       var W = doc.internal.pageSize.getWidth(), L = 48, y = 54;
+      if(LOGO){ try{ doc.addImage(LOGO,'PNG', W-L-46, 30, 46, 46); }catch(e){} }
       doc.setFont('helvetica','bold'); doc.setTextColor(30,58,43); doc.setFontSize(20); doc.text('Biofoods Paraguay', L, y);
       doc.setFontSize(13); doc.setTextColor(120,120,120); doc.text('Pedido ' + O.code, L, y+20);
       doc.setDrawColor(222,210,185); doc.line(L, y+32, W-L, y+32); y += 58;
@@ -226,8 +238,11 @@ tr:hover td{background:#faf6ec}a.row{color:inherit;text-decoration:none}
       <input name="q" placeholder="Buscar cliente o N°…" value="<?=e($q)?>">
       <select name="status"><option value="">Todos los estados</option><?php foreach(['pending'=>'Pendiente','paid'=>'Pagado','done'=>'Entregado','cancel'=>'Cancelado'] as $k=>$v):?><option value="<?=$k?>" <?=$fs===$k?'selected':''?>><?=$v?></option><?php endforeach;?></select>
       <input name="source" placeholder="Origen" value="<?=e($fo)?>">
+      <label style="font-size:.8rem;color:var(--muted)">Desde <input type="date" name="desde" value="<?=e($fd)?>"></label>
+      <label style="font-size:.8rem;color:var(--muted)">Hasta <input type="date" name="hasta" value="<?=e($fh)?>"></label>
       <button class="btn">Filtrar</button>
-      <a class="btn ghost" href="?export=csv&q=<?=urlencode($q)?>&status=<?=e($fs)?>&source=<?=urlencode($fo)?>">⬇ Exportar CSV</a>
+      <a class="btn ghost" href="?export=csv&<?=e($qs)?>">⬇ Exportar CSV</a>
+      <?php if($qs):?><a class="btn ghost" href="index.php">Limpiar</a><?php endif;?>
     </form>
     <table>
       <thead><tr><th>N°</th><th>Fecha</th><th>Cliente</th><th>Total</th><th>Entrega</th><th>Pago</th><th>Origen</th><th>Estado</th></tr></thead>
@@ -247,6 +262,16 @@ tr:hover td{background:#faf6ec}a.row{color:inherit;text-decoration:none}
       <?php endforeach;?>
       </tbody>
     </table>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:.9rem 1rem;border-top:1px solid var(--cream2);font-size:.85rem;color:var(--muted)">
+      <span><?=$totalRows?> pedido(s)<?=$qs?' (filtrados)':''?></span>
+      <?php if($pages>1): $pfx = 'index.php?'.($qs?$qs.'&':''); ?>
+      <span style="display:flex;gap:.5rem;align-items:center">
+        <?php if($page>1):?><a class="btn ghost" href="<?=$pfx?>pg=<?=$page-1?>">← Anterior</a><?php endif;?>
+        <span>Página <?=$page?> de <?=$pages?></span>
+        <?php if($page<$pages):?><a class="btn ghost" href="<?=$pfx?>pg=<?=$page+1?>">Siguiente →</a><?php endif;?>
+      </span>
+      <?php endif;?>
+    </div>
   </div>
 </div>
 <div id="newBanner" style="display:none;position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#1e3a2b;color:#fbf7ee;padding:.7rem 1.2rem;border-radius:100px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.25);cursor:pointer;z-index:200">🔔 <span id="newCount">1</span> pedido(s) nuevo(s) — actualizar</div>

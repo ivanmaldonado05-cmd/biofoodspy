@@ -1,0 +1,2 @@
+# Librerías internas — sin acceso web directo (PHP las incluye por archivo, no por URL)
+Require all denied

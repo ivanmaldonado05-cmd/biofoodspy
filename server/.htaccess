@@ -1,0 +1,11 @@
+# Sin listado de carpetas
+Options -Indexes
+
+# Bloquear acceso web directo a archivos sensibles
+# (PHP los sigue usando internamente vía require; esto solo corta el acceso por URL)
+<FilesMatch "\.(sql|md)$">
+  Require all denied
+</FilesMatch>
+<FilesMatch "^(config\.php|config\.sample\.php|db\.php)$">
+  Require all denied
+</FilesMatch>
