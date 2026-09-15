@@ -54,4 +54,6 @@ $processId = $data['process_id'] ?? null;
 if (!$processId) json_out(['ok'=>false,'error'=>'Sin process_id','bancard'=>$data], 502);
 
 $pdo->prepare("UPDATE orders SET bancard_process_id=? WHERE id=?")->execute([$processId, $order['id']]);
-json_out(['ok'=>true, 'process_id'=>$processId]);
+// URL del JS del checkout de Bancard (verificar ruta/versión exacta con la documentación de Bancard).
+$jsUrl = $base . '/checkout/javascript/dist/bancard-checkout-4.0.0.js';
+json_out(['ok'=>true, 'process_id'=>$processId, 'js_url'=>$jsUrl]);

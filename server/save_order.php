@@ -84,26 +84,31 @@ $summary = "<table style='width:100%;border-collapse:collapse;font-family:Arial,
   . "<tr><td style='padding-top:8px'>Envío</td><td align='right' style='padding-top:8px'>" . ($shipping?money($shipping):'Gratis') . "</td></tr>"
   . "<tr><td style='font-weight:bold;padding-top:6px'>Total</td><td align='right' style='font-weight:bold;padding-top:6px'>" . money($total) . "</td></tr></table>";
 
-// (1) al negocio
-$bizHtml = "<div style='font-family:Arial,sans-serif;color:#232619'>"
-  . "<h2 style='color:#1e3a2b'>Nuevo pedido {$code}</h2>"
-  . "<p><b>Cliente:</b> " . e($name) . "<br><b>Email:</b> " . e($email) . "<br><b>Teléfono:</b> " . e($phone)
-  . "<br><b>Origen:</b> " . e($source) . "<br><b>Entrega:</b> " . e($delivLabel)
-  . ($address ? "<br><b>Dirección:</b> " . e($address) : '') . "</p>{$locLine}"
-  . ($note ? "<p><b>Nota:</b> " . e($note) . "</p>" : '')
-  . "<p><b>Pago:</b> " . ($payment==='tarjeta'?'Tarjeta (Bancard)':'Transferencia — comprobante adjunto') . "</p>"
-  . $summary . "</div>";
-$proofPath = $proofName ? ($c['upload_dir'] . '/' . $proofName) : null;
-@send_mail($c['business_email'], "Nuevo pedido {$code} — Biofoods", $bizHtml, $proofPath, $proofName);
+// Emails: solo para transferencia. En tarjeta (Bancard) los correos salen desde
+// bancard/confirm.php cuando el pago queda aprobado.
+$emailed = false;
+if ($payment === 'transferencia') {
+  // (1) al negocio
+  $bizHtml = "<div style='font-family:Arial,sans-serif;color:#232619'>"
+    . "<h2 style='color:#1e3a2b'>Nuevo pedido {$code}</h2>"
+    . "<p><b>Cliente:</b> " . e($name) . "<br><b>Email:</b> " . e($email) . "<br><b>Teléfono:</b> " . e($phone)
+    . "<br><b>Origen:</b> " . e($source) . "<br><b>Entrega:</b> " . e($delivLabel)
+    . ($address ? "<br><b>Dirección:</b> " . e($address) : '') . "</p>{$locLine}"
+    . ($note ? "<p><b>Nota:</b> " . e($note) . "</p>" : '')
+    . "<p><b>Pago:</b> Transferencia — comprobante adjunto</p>"
+    . $summary . "</div>";
+  $proofPath = $proofName ? ($c['upload_dir'] . '/' . $proofName) : null;
+  @send_mail($c['business_email'], "Nuevo pedido {$code} — Biofoods", $bizHtml, $proofPath, $proofName);
 
-// (2) al cliente (un solo email)
-$custHtml = "<div style='font-family:Arial,sans-serif;color:#232619'>"
-  . "<h2 style='color:#1e3a2b'>¡Gracias por tu pedido, " . e($name) . "!</h2>"
-  . "<p>Recibimos tu pedido <b>{$code}</b> y tu comprobante. Verificamos la transferencia y te avisamos apenas esté confirmada.</p>"
-  . "<p><b>Entrega:</b> " . e($delivLabel) . "</p>"
-  . $summary
-  . ($payment==='transferencia' ? "<p style='margin-top:12px;color:#6d7263'>Datos de la transferencia: {$bankLine}</p>" : '')
-  . "<p style='margin-top:16px'>Biofoods Paraguay 🌿</p></div>";
-$emailed = @send_mail($email, "Recibimos tu pedido {$code} — Biofoods", $custHtml);
+  // (2) al cliente (un solo email)
+  $custHtml = "<div style='font-family:Arial,sans-serif;color:#232619'>"
+    . "<h2 style='color:#1e3a2b'>¡Gracias por tu pedido, " . e($name) . "!</h2>"
+    . "<p>Recibimos tu pedido <b>{$code}</b> y tu comprobante. Verificamos la transferencia y te avisamos apenas esté confirmada.</p>"
+    . "<p><b>Entrega:</b> " . e($delivLabel) . "</p>"
+    . $summary
+    . "<p style='margin-top:12px;color:#6d7263'>Datos de la transferencia: {$bankLine}</p>"
+    . "<p style='margin-top:16px'>Biofoods Paraguay 🌿</p></div>";
+  $emailed = @send_mail($email, "Recibimos tu pedido {$code} — Biofoods", $custHtml);
+}
 
-json_out(['ok' => true, 'order_id' => $id, 'code' => $code, 'emailed' => (bool)$emailed]);
+json_out(['ok' => true, 'order_id' => $id, 'code' => $code, 'payment' => $payment, 'emailed' => (bool)$emailed]);

@@ -294,6 +294,16 @@
   /* ================= WhatsApp + EmailJS ================= */
   function waLink(text){ return "https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(text); }
 
+  var _scripts={};
+  function loadScript(url){
+    if(!url) return Promise.reject(new Error("sin url"));
+    if(_scripts[url]) return _scripts[url];
+    _scripts[url]=new Promise(function(res,rej){
+      var s=document.createElement("script"); s.src=url; s.onload=res; s.onerror=function(){rej(new Error("no se pudo cargar "+url));}; document.head.appendChild(s);
+    });
+    return _scripts[url];
+  }
+
   var emailjsPromise=null;
   function loadEmailJS(){
     if(window.emailjs) return Promise.resolve();
@@ -337,7 +347,7 @@
       root.innerHTML='<div class="container section empty-state"><span>🛒</span><p>Tu carrito está vacío.</p><a class="btn" href="catalogo.html" style="margin-top:1rem">Ir al catálogo</a></div>';
       initReveal(); return;
     }
-    var state={ deliv:"envio", city:null, shipping:0 };
+    var state={ deliv:"envio", city:null, shipping:0, pay:"transferencia" };
     var map=null, marker=null;
 
     root.innerHTML =
@@ -356,7 +366,7 @@
             '</div>'+
           '</section>'+
           '<section class="ck-card"><h2 class="ck-h2">Entrega</h2>'+
-            '<div class="toggle-group"><button type="button" class="toggle-opt active" data-deliv="envio">Envío<small>Según tu ciudad</small></button>'+
+            '<div class="toggle-group" id="delivToggle"><button type="button" class="toggle-opt active" data-deliv="envio">Envío<small>Según tu ciudad</small></button>'+
             '<button type="button" class="toggle-opt" data-deliv="retiro">Retiro<small>Gratis en el local</small></button></div>'+
             '<div id="envioBlock">'+
               '<p class="ck-label">Elegí tu ciudad / zona *</p>'+
@@ -372,14 +382,22 @@
               '<div class="pickup-card">'+IC.pin+'<div><b>'+PICKUP.office+'</b><span>⏱ '+PICKUP.ready+' · Sin costo de envío</span></div></div>'+
             '</div>'+
           '</section>'+
-          '<section class="ck-card"><h2 class="ck-h2">Pago — Depósito / transferencia</h2>'+
-            '<div class="deposit-box"><div class="row"><span>'+BANK.banco+'</span><span>'+BANK.cuenta+'</span></div>'+
-              '<div class="row"><span>Titular</span><span>'+BANK.titular+'</span></div>'+
-              '<div class="row"><span>'+BANK.ci+'</span><span>Alias: '+BANK.alias+'</span></div></div>'+
-            '<p class="ck-note">Realizá la transferencia a la cuenta de arriba y adjuntá tu comprobante para confirmar el pedido.</p>'+
-            '<div class="field ck-upload"><label for="fProof">Comprobante de transferencia * <small>(imagen o PDF · máx. 10 MB)</small></label>'+
-              '<input id="fProof" type="file" accept="image/*,application/pdf">'+
-              '<p class="upload-name" id="proofName">Ningún archivo seleccionado</p>'+
+          '<section class="ck-card"><h2 class="ck-h2">Pago</h2>'+
+            '<div class="toggle-group" id="payToggle"><button type="button" class="toggle-opt active" data-pay="transferencia">Transferencia<small>Con comprobante</small></button>'+
+            '<button type="button" class="toggle-opt" data-pay="tarjeta">Tarjeta<small>Débito / crédito</small></button></div>'+
+            '<div id="payTransfer">'+
+              '<div class="deposit-box"><div class="row"><span>'+BANK.banco+'</span><span>'+BANK.cuenta+'</span></div>'+
+                '<div class="row"><span>Titular</span><span>'+BANK.titular+'</span></div>'+
+                '<div class="row"><span>'+BANK.ci+'</span><span>Alias: '+BANK.alias+'</span></div></div>'+
+              '<p class="ck-note">Realizá la transferencia a la cuenta de arriba y adjuntá tu comprobante para confirmar el pedido.</p>'+
+              '<div class="field ck-upload"><label for="fProof">Comprobante de transferencia * <small>(imagen o PDF · máx. 10 MB)</small></label>'+
+                '<input id="fProof" type="file" accept="image/*,application/pdf">'+
+                '<p class="upload-name" id="proofName">Ningún archivo seleccionado</p>'+
+              '</div>'+
+            '</div>'+
+            '<div id="payCard" style="display:none">'+
+              '<p class="ck-note">Al confirmar, vas a pagar con tu tarjeta en el formulario seguro de <b>Bancard</b> (los datos de la tarjeta no pasan por nuestro sitio).</p>'+
+              '<div id="bancardBox" class="bancard-box" style="display:none"></div>'+
             '</div>'+
             '<div class="field" style="margin-top:1rem"><label for="fNote">Nota (opcional)</label><input id="fNote" type="text" placeholder="Alguna aclaración"></div>'+
           '</section>'+
@@ -407,14 +425,24 @@
     }
     recompute();
 
-    $$("#ckForm .toggle-opt").forEach(function(b){ b.addEventListener("click",function(){
-      $$("#ckForm .toggle-opt").forEach(function(x){x.classList.remove("active");}); b.classList.add("active");
+    $$("#delivToggle .toggle-opt").forEach(function(b){ b.addEventListener("click",function(){
+      $$("#delivToggle .toggle-opt").forEach(function(x){x.classList.remove("active");}); b.classList.add("active");
       state.deliv=b.getAttribute("data-deliv");
       var envio=state.deliv==="envio";
       $("#envioBlock").style.display=envio?"block":"none";
       $("#retiroBlock").style.display=envio?"none":"block";
       recompute();
       if(envio) setTimeout(initMap,60);
+    }); });
+
+    // método de pago
+    $$("#payToggle .toggle-opt").forEach(function(b){ b.addEventListener("click",function(){
+      $$("#payToggle .toggle-opt").forEach(function(x){x.classList.remove("active");}); b.classList.add("active");
+      state.pay=b.getAttribute("data-pay");
+      var transfer=state.pay==="transferencia";
+      $("#payTransfer").style.display=transfer?"block":"none";
+      $("#payCard").style.display=transfer?"none":"block";
+      $("#placeOrder").textContent = transfer ? "Confirmar pedido" : "Pagar con tarjeta";
     }); });
 
     $$("#shipList input[name=ship]").forEach(function(r){ r.addEventListener("change",function(){
@@ -462,9 +490,9 @@
       else if(!phone) err="Ingresá tu teléfono.";
       else if(state.deliv==="envio" && state.city==null) err="Elegí tu ciudad / zona de envío.";
       else if(state.deliv==="envio" && !addr) err="Ingresá tu dirección de envío.";
-      else if(!proof) err="Adjuntá tu comprobante de transferencia.";
-      else if(!/^image\//.test(proof.type) && proof.type!=="application/pdf") err="El comprobante debe ser una imagen o un PDF.";
-      else if(proof.size>10*1024*1024) err="El comprobante supera los 10 MB.";
+      else if(state.pay==="transferencia" && !proof) err="Adjuntá tu comprobante de transferencia.";
+      else if(state.pay==="transferencia" && proof && !/^image\//.test(proof.type) && proof.type!=="application/pdf") err="El comprobante debe ser una imagen o un PDF.";
+      else if(state.pay==="transferencia" && proof && proof.size>10*1024*1024) err="El comprobante supera los 10 MB.";
       var m=$("#ckMsg");
       if(err){ m.textContent=err; m.classList.add("err"); return; }
       m.classList.remove("err");
@@ -485,22 +513,53 @@
         window.scrollTo(0,0);
         initReveal();
       }
+      function fail(msg){ btn.disabled=false; btn.textContent = state.pay==="tarjeta"?"Pagar con tarjeta":"Confirmar pedido"; m.textContent=msg; m.classList.add("err"); }
 
-      // ---- Producción (Hostinger): envía pedido + comprobante al backend PHP ----
+      // Pago con tarjeta solo funciona en el sitio publicado (necesita backend + Bancard)
+      if(state.pay==="tarjeta" && !window.BIOFOODS_API){
+        fail("El pago con tarjeta funciona en el sitio publicado (con Bancard). En esta vista de prueba, usá Transferencia."); return;
+      }
+
+      // ---- Producción (Hostinger): envía el pedido al backend PHP ----
       if(window.BIOFOODS_API){
+        var api=String(window.BIOFOODS_API).replace(/\/$/,"");
         var fd=new FormData();
         fd.append("name",name); fd.append("email",email); fd.append("phone",phone);
         fd.append("deliv",state.deliv); fd.append("city",state.city||""); fd.append("address",addr);
         if(orderLoc){ fd.append("lat",orderLoc.lat); fd.append("lng",orderLoc.lng); }
-        fd.append("note",note); fd.append("source",getSource()); fd.append("payment","transferencia");
+        fd.append("note",note); fd.append("source",getSource()); fd.append("payment",state.pay);
         fd.append("subtotal",sub); fd.append("shipping",shipping); fd.append("total",d.total);
         fd.append("items", JSON.stringify(cart.map(function(i){var p=byHandle(i.handle)||{};return {title:p.title||i.handle,size:i.size,qty:i.qty,price:i.price};})));
         if(proof) fd.append("proof", proof);
-        fetch(String(window.BIOFOODS_API).replace(/\/$/,"")+"/save_order.php",{method:"POST",body:fd})
+        fetch(api+"/save_order.php",{method:"POST",body:fd})
           .then(function(r){return r.json();})
-          .then(function(res){ if(res&&res.ok){ finish(!!res.emailed); } else { throw new Error((res&&res.error)||"error"); } })
-          .catch(function(){ btn.disabled=false; btn.textContent="Confirmar pedido"; m.textContent="No se pudo enviar el pedido. Probá de nuevo."; m.classList.add("err"); });
+          .then(function(res){
+            if(!(res&&res.ok)) throw new Error((res&&res.error)||"error");
+            if(state.pay==="tarjeta"){ startBancard(api, res.order_id); }
+            else { finish(!!res.emailed); }
+          })
+          .catch(function(){ fail("No se pudo enviar el pedido. Probá de nuevo."); });
         return;
+      }
+
+      // Inicia el pago con tarjeta: crea la operación en Bancard y muestra el formulario seguro (iframe).
+      function startBancard(api, orderId){
+        m.classList.remove("err"); m.textContent="Iniciando pago seguro…";
+        var f2=new FormData(); f2.append("order_id", orderId);
+        fetch(api+"/bancard/create.php",{method:"POST",body:f2})
+          .then(function(r){return r.json();})
+          .then(function(res){
+            if(!(res&&res.ok&&res.process_id)) throw new Error((res&&res.error)||"bancard");
+            return loadScript(res.js_url).then(function(){
+              var box=$("#bancardBox"); box.style.display="block"; box.innerHTML="";
+              // NOTA: verificar la API exacta del checkout de Bancard con su documentación al integrar en sandbox.
+              if(window.Bancard && window.Bancard.Checkout){ window.Bancard.Checkout.createForm("bancardBox", res.process_id); }
+              btn.style.display="none";
+              m.classList.remove("err"); m.textContent="Ingresá los datos de tu tarjeta en el formulario seguro de Bancard.";
+              box.scrollIntoView({behavior:"smooth", block:"center"});
+            });
+          })
+          .catch(function(err){ fail("No se pudo iniciar el pago con tarjeta. " + ((err&&err.message)||"")); });
       }
 
       if(emailjsReady()){

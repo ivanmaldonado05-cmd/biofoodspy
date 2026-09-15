@@ -35,10 +35,18 @@ if ($aprobado && ($tokenOk || $token === '')) { // en staging el token puede var
   // confirmación al cliente
   $o = $pdo->prepare("SELECT * FROM orders WHERE id=?"); $o->execute([$shop_process_id]); $order = $o->fetch();
   if ($order) {
+    $oc = order_code($order['id']);
+    // al cliente
     $html = "<div style='font-family:Arial,sans-serif;color:#232619'><h2 style='color:#1e3a2b'>¡Pago confirmado!</h2>"
-      . "<p>Gracias " . e($order['name']) . ". Tu pago del pedido <b>" . order_code($order['id']) . "</b> fue aprobado. Total: <b>" . money($order['total']) . "</b>.</p>"
+      . "<p>Gracias " . e($order['name']) . ". Tu pago del pedido <b>{$oc}</b> fue aprobado con tarjeta. Total: <b>" . money($order['total']) . "</b>.</p>"
       . "<p>Biofoods Paraguay 🌿</p></div>";
-    @send_mail($order['email'], "Pago confirmado — pedido " . order_code($order['id']) . " — Biofoods", $html);
+    @send_mail($order['email'], "Pago confirmado — pedido {$oc} — Biofoods", $html);
+    // al negocio
+    $biz = "<div style='font-family:Arial,sans-serif;color:#232619'><h2 style='color:#1e3a2b'>Venta pagada con tarjeta {$oc}</h2>"
+      . "<p><b>Cliente:</b> " . e($order['name']) . " · " . e($order['email']) . " · " . e($order['phone'])
+      . "<br><b>Entrega:</b> " . ($order['delivery']==='retiro'?'Retiro':'Envío' . ($order['city']?(' — '.e($order['city'])):''))
+      . "<br><b>Total:</b> " . money($order['total']) . " · <b>Origen:</b> " . e($order['source']) . "</p></div>";
+    @send_mail(cfg()['business_email'], "Venta pagada (tarjeta) {$oc} — Biofoods", $biz);
   }
 }
 

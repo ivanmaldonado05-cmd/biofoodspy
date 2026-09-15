@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resultado del pago — Biofoods Paraguay</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/img/logo-black.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,560;9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="resultado">
+<div id="header-root"></div>
+
+<main>
+  <div class="container section">
+    <div class="ck-confirm" id="resultRoot">
+      <div class="ck-confirm__ic" style="background:var(--cream-2)">⏳</div>
+      <h1>Verificando tu pago…</h1>
+      <p class="lead" style="margin-inline:auto">Un momento, estamos confirmando el resultado con Bancard.</p>
+    </div>
+  </div>
+</main>
+
+<div id="footer-root"></div>
+<script src="js/catalog-data.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function(){
+  var API = window.BIOFOODS_API || "/server";
+  var params = new URLSearchParams(location.search);
+  var order = params.get("order");
+  var cancelled = params.get("cancel") === "1";
+  var root = document.getElementById("resultRoot");
+
+  function render(state, data){
+    data = data || {};
+    var views = {
+      paid: {ic:"✅", bg:"#d8ecdc", h:"¡Pago confirmado!", p:"Gracias por tu compra. Te enviamos la confirmación por email"+(data.code?" (pedido "+data.code+")":"")+".", btn:'<a class="btn btn--lg" href="index.html" style="margin-top:1.4rem">Volver al inicio</a>'},
+      pending:{ic:"⏳", bg:"var(--cream-2)", h:"Pago en proceso", p:"Estamos confirmando tu pago. Si se aprueba, te llega la confirmación por email en unos minutos.", btn:'<a class="btn btn--lg" href="index.html" style="margin-top:1.4rem">Volver al inicio</a>'},
+      failed:{ic:"❌", bg:"#f2dcd4", h:"El pago no se completó", p:"No se pudo procesar el pago o fue cancelado. Podés intentar de nuevo.", btn:'<a class="btn btn--lg" href="checkout.html" style="margin-top:1.4rem">Volver a intentar</a>'},
+      error:{ic:"⚠️", bg:"var(--cream-2)", h:"No pudimos verificar el pago", p:"Si ya pagaste, revisá tu email; ante cualquier duda escribinos por WhatsApp.", btn:'<a class="btn btn--lg" href="index.html" style="margin-top:1.4rem">Volver al inicio</a>'}
+    };
+    var v = views[state] || views.error;
+    root.innerHTML = '<div class="ck-confirm__ic" style="background:'+v.bg+'">'+v.ic+'</div>'+
+      '<h1>'+v.h+'</h1><p class="lead" style="margin-inline:auto">'+v.p+'</p>'+
+      (data.total?'<div class="ck-confirm__box"><div class="row"><span>Total</span><b>Gs. '+Number(data.total).toLocaleString("de-DE")+'</b></div></div>':'')+
+      v.btn;
+  }
+  function clearCart(){ try{ localStorage.removeItem("biofoods_cart_v1"); }catch(e){} }
+
+  if(!order){ render(cancelled?"failed":"error"); return; }
+
+  var tries = 0, max = 5;
+  function poll(){
+    tries++;
+    fetch(API.replace(/\/$/,"")+"/bancard/status.php?order="+encodeURIComponent(order),{cache:"no-store"})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(!d || !d.ok){ render("error"); return; }
+        if(d.status==="paid" || d.status==="done"){ clearCart(); render("paid", d); return; }
+        if(d.status==="cancel" || cancelled){ render("failed", d); return; }
+        if(tries < max){ setTimeout(poll, 1500); } else { render("pending", d); }
+      })
+      .catch(function(){ if(tries<max){ setTimeout(poll,1500); } else { render("error"); } });
+  }
+  poll();
+})();
+</script>
+</body>
+</html>
