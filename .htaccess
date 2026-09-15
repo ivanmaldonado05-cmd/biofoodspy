@@ -1,0 +1,11 @@
+# Biofoods — cache/control
+# Sin listado de carpetas
+Options -Indexes
+
+# Revalidar JS/CSS/HTML en cada carga → el navegador siempre baja la última versión
+# (si el archivo no cambió, el servidor responde 304 y no lo re-descarga: costo mínimo)
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|html)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
